@@ -25,8 +25,9 @@ model Owner {
   email          String
   name           String
   companyName    String
+  companySlug    String
   imageUrl       String
-  compnayIconUrl String
+  companyIconUrl String
   role           OwnerRole @default(NOAGENCY)
 
   createdAt DateTime @default(now())

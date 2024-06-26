@@ -6,26 +6,35 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { id, email_addresses, first_name, image_url } = body?.data;
 
-    const email = email_addresses[0]?.email_address;
-    console.log("✅", body);
+    const email = email_addresses?.[0]?.email_address;
+    console.log("✅ Received data:", body);
 
-    prisma.owner.create({
+    if (!email) {
+      return new NextResponse("Email address is missing", { status: 400 });
+    }
+
+    await prisma.owner.create({
       data: {
+        id: id,
         clerkId: id,
         email: email,
-        name: first_name,
-        imageUrl: image_url,
+        name: first_name || "",
+        imageUrl: image_url || "",
         role: "NOAGENCY",
-        companyName: "", // Add the companyName property with an empty string value
-        compnayIconUrl: "", // Add the companyIconUrl property with an empty string value
+        companyName: "",
+        companySlug: "",
+        companyIconUrl: "",
       },
     });
 
-    return new NextResponse("User updated in database successfully", {
+    return new NextResponse("User created in the database successfully", {
       status: 200,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error updating database:", error);
-    return new NextResponse("Error updating user in database", { status: 500 });
+    return new NextResponse(
+      `Error updating user in database: ${error.message}`,
+      { status: 500 }
+    );
   }
 }
