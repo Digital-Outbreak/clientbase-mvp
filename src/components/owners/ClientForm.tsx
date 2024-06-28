@@ -69,6 +69,10 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
     form.setValue("clientSlug", slug);
   };
 
+  const generatePassword = () => {
+    const password = Math.random().toString(36).slice(-8);
+    form.setValue("clientPassword", password);
+  };
   const onSubmit = (data: z.infer<typeof clientFormScehma>) => {};
 
   return (
@@ -139,12 +143,19 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
             <FormItem className="w-full ">
               <FormLabel>Client Password*</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  className="py-4"
-                  placeholder="Enter Client Password*"
-                  {...field}
-                />
+                <div className="flex gap-5">
+                  <Input
+                    className="py-4"
+                    placeholder="Enter Client Password"
+                    {...field}
+                  />
+                  <Button
+                    disabled={form.formState.isSubmitting}
+                    onClick={generatePassword}
+                  >
+                    Generate Random
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage>
                 {form.formState.errors.clientPassword?.message}
@@ -219,6 +230,9 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
             </FormItem>
           )}
         />
+        <div className="flex justify-center mt-6">
+          <Button type="submit">Submit</Button>
+        </div>
       </form>
     </Form>
   );
