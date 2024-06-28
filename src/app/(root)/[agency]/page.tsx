@@ -7,6 +7,9 @@ import OwnerHeader from "@/components/owners/OwnerHeader";
 import OwnerSidebar from "@/components/owners/OwnerSidebar";
 import Loading from "@/components/global/loading";
 import ClientTable from "@/components/owners/ClientTable";
+import { Button } from "@/components/ui/button";
+import { Plus, PlusCircle, PlusIcon } from "lucide-react";
+import AddClientDialog from "@/components/owners/AddClientDialog";
 
 const AgencyPage = () => {
   const [owner, setOwner] = useState<Owner>();
@@ -33,7 +36,14 @@ const AgencyPage = () => {
       <div className="flex-1 ml-[6rem] lg:ml-[20%]">
         <OwnerHeader className="border-b-2 border-gray-900 border-dotted" />
         <div className="p-4">
-          <h1 className="text-3xl font-bold mb-4">Manage Clients</h1>
+          <div className="flex justify-between">
+            <h1 className="text-3xl font-bold mb-4">Manage Clients</h1>
+            <AddClientDialog>
+              <Button className="flex gap-1 items-center">
+                <PlusCircle className="h-6 w-6" /> Add New Client
+              </Button>
+            </AddClientDialog>
+          </div>{" "}
           <ClientTable />
         </div>
       </div>

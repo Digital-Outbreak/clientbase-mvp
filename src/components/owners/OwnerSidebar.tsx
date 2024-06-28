@@ -24,19 +24,19 @@ export default function OwnerSidebar({ owner, active }: OwnerSidebarProps) {
     },
   ];
   return (
-    <div className="flex p-4 items-center border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
+    <div className="flex p-4 items-center bg-background z-[999] border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
       <div>
-        <div className="flex flex-row gap-5 items-center">
+        <div className="flex flex-row gap-3 items-center">
           <Image
             src={owner.companyIconUrl}
             alt={owner.companyName}
             width={50}
             height={50}
             className="rounded-full object-cover border-white border-2"
-            style={{ width: "50px", height: "50px" }}
+            style={{ width: "40px", height: "40px" }}
           />
 
-          <h1 className="hidden font-bold md:block text-2xl">
+          <h1 className="hidden font-bold md:block text-[1.2rem]">
             {owner.companyName}
           </h1>
         </div>
