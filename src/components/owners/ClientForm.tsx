@@ -13,9 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { handleError } from "@/lib/utils";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { defaultBannerUrl, defaultLoomLink } from "@/lib/data";
+import { createClient } from "@/lib/db/owner-queries";
 
 const clientFormScehma = z.object({
   clientName: z.string().min(2, {
@@ -30,13 +31,7 @@ const clientFormScehma = z.object({
   clientSlug: z.string().min(2, {
     message: "Company slug must be at least 2 characters.",
   }),
-  loomVideo: z
-    .string()
-    .url({
-      message: "Valid URL required.",
-    })
-    .default(defaultLoomLink)
-    .optional(),
+  loomVideo: z.string().default(defaultLoomLink).optional(),
 
   clientPassword: z.string().min(6, {
     message: "Password must be at least 5 characters.",
@@ -44,10 +39,9 @@ const clientFormScehma = z.object({
 });
 
 const ClientForm = ({ owner }: { owner: Owner }) => {
+  const router = useRouter();
   const [clientIconUrl, setClientIconUrl] = useState<string>("" as string);
-  const [bannerUrl, setBannerUrl] = useState<string>(
-    "defaultBannerUrl" as string
-  );
+  const [bannerUrl] = useState<string>(defaultBannerUrl);
   const form = useForm<z.infer<typeof clientFormScehma>>({
     resolver: zodResolver(clientFormScehma),
     defaultValues: {
@@ -73,7 +67,26 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
     const password = Math.random().toString(36).slice(-8);
     form.setValue("clientPassword", password);
   };
-  const onSubmit = (data: z.infer<typeof clientFormScehma>) => {};
+  const onSubmit = (data: z.infer<typeof clientFormScehma>) => {
+    if (!clientIconUrl) return alert("Please upload a client logo.");
+    const client = {
+      name: data.clientName,
+      email: data.clientEmail,
+      clientCompany: data.clientCompany,
+      clientSlug: data.clientSlug,
+      password: data.clientPassword,
+      companyName: owner.companyName,
+      pfpUrl: clientIconUrl,
+      bannerUrl: bannerUrl,
+      loom: data.loomVideo ? data.loomVideo : defaultLoomLink,
+      ownerId: owner.id,
+    };
+    createClient(client).then((res) => {
+      if (res) {
+        router.push(`/${owner.companySlug}/${client.clientSlug}`);
+      }
+    });
+  };
 
   return (
     <Form {...form}>

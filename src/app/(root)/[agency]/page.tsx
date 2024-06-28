@@ -10,9 +10,11 @@ import ClientTable from "@/components/owners/ClientTable";
 import { Button } from "@/components/ui/button";
 import { Plus, PlusCircle, PlusIcon } from "lucide-react";
 import AddClientDialog from "@/components/owners/AddClientDialog";
+import { getClientsByOwner } from "@/lib/db/client-queries";
 
 const AgencyPage = () => {
   const [owner, setOwner] = useState<Owner>();
+  const [clients, setClients] = useState<Client[]>([]);
   const params = useParams();
 
   useEffect(() => {
@@ -21,10 +23,20 @@ const AgencyPage = () => {
       setOwner(owner as Owner);
     };
 
+    const fetchClients = async (ownerI: Owner) => {
+      const clients = await getClientsByOwner(ownerI.id);
+
+      setClients(clients as Client[]);
+    };
+
     if (params.agency) {
       fetchOwner();
     }
-  }, [params.agency]);
+
+    if (owner) {
+      fetchClients(owner);
+    }
+  }, [params.agency, owner]);
 
   return owner ? (
     <div className="flex h-screen">
@@ -44,7 +56,7 @@ const AgencyPage = () => {
               </Button>
             </AddClientDialog>
           </div>{" "}
-          <ClientTable />
+          <ClientTable client={clients} />
         </div>
       </div>
     </div>

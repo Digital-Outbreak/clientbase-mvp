@@ -42,3 +42,17 @@ export const getOwnerBySlug = async (slug: string): Promise<Owner | null> => {
     return null;
   }
 };
+
+export const createClient = async (client: any) => {
+  try {
+    const newClient = await prisma.client.create({
+      data: {
+        ...client,
+      },
+    });
+    return newClient;
+  } catch (error: any) {
+    console.error(`Error creating client: ${error.message}`);
+    return null;
+  }
+};

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { UploadDropzone } from "@/lib/uploadthing";
 import { handleError } from "@/lib/utils";
 import { updateOwner } from "@/lib/db/owner-queries";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface AgencyFormProps {
   user: Owner | null;
@@ -38,6 +38,7 @@ const formSchema = z.object({
 });
 
 const AgencyForm: React.FC<AgencyFormProps> = ({ user }) => {
+  const router = useRouter();
   const [companyUrl, setCompanyUrl] = React.useState<string>("" as string);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -61,7 +62,7 @@ const AgencyForm: React.FC<AgencyFormProps> = ({ user }) => {
     };
     updateOwner(user?.id as string, owner).then((res) => {
       if (res) {
-        redirect(`/${owner.companySlug}`);
+        router.push(`/${owner.companySlug}`);
       }
     });
   };
