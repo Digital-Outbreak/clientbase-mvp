@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getOwnerById } from "@/lib/db/owner-queries";
 import { redirect } from "next/navigation";
 import AgencyForm from "@/components/owners/AgencyForm";
+import OwnerHeader from "@/components/owners/OwnerHeader";
 
 const DashboardPage = async () => {
   const { userId } = auth();
@@ -18,6 +19,7 @@ const DashboardPage = async () => {
 
   return (
     <div>
+      <OwnerHeader />
       <AgencyForm user={owner} />
     </div>
   );

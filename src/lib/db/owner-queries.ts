@@ -26,3 +26,19 @@ export const updateOwner = async (id: string, owner: any) => {
     return null;
   }
 };
+
+export const getOwnerBySlug = async (slug: string): Promise<Owner | null> => {
+  try {
+    const owner: Owner | null = await prisma.owner.findFirst({
+      where: { companySlug: slug },
+    });
+
+    if (!owner) {
+      throw new Error(`Owner with slug ${slug} not found`);
+    }
+    return owner;
+  } catch (error: any) {
+    console.error(`Error fetching owner by slug ${slug}: ${error.message}`);
+    return null;
+  }
+};

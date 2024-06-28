@@ -7,7 +7,7 @@ interface Owner {
   name: string;
   companyName: string;
   imageUrl: string;
-  companySlug: string;
+  companySlug: string | null;
   companyIconUrl: string;
   role: "NOAGENCY" | "AGENCY";
   createdAt: Date;

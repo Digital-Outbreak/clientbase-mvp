@@ -8,7 +8,6 @@ const RootLayout = ({
 }>) => {
   return (
     <div className="relative min-h-screen">
-      <OwnerHeader />
       <main className="pt-3">{children}</main>
     </div>
   );
