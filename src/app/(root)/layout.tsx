@@ -8,7 +8,7 @@ const RootLayout = ({
 }>) => {
   return (
     <div className="relative min-h-screen">
-      <main className="pt-3">{children}</main>
+      <main className="">{children}</main>
     </div>
   );
 };

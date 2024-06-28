@@ -6,10 +6,10 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 
-const OwnerHeader = () => {
+const OwnerHeader = ({ className }: { className?: string }) => {
   const user = useUser();
   return (
-    <div className="p-6 shadow-md flex justify-between z-[999]">
+    <div className={`p-6 shadow-md flex justify-between z-[999] ${className}`}>
       <Link
         href="/"
         className="flex justify-center mb-4 hover:opacity-80 transition duration-300 ease-in-out"

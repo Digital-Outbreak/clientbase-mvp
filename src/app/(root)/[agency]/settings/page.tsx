@@ -3,12 +3,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getOwnerBySlug } from "@/lib/db/owner-queries";
-import OwnerHeader from "@/components/owners/OwnerHeader";
 import OwnerSidebar from "@/components/owners/OwnerSidebar";
+import OwnerHeader from "@/components/owners/OwnerHeader";
 import Loading from "@/components/global/loading";
-import ClientTable from "@/components/owners/ClientTable";
 
-const AgencyPage = () => {
+const OwnerSettingsPage = () => {
   const [owner, setOwner] = useState<Owner>();
   const params = useParams();
 
@@ -27,14 +26,14 @@ const AgencyPage = () => {
     <div className="flex h-screen">
       {owner && (
         <div className="lg:w-[20%] w-24 fixed h-full">
-          <OwnerSidebar owner={owner} active="home" />
+          <OwnerSidebar owner={owner} active="settings" />
         </div>
       )}
-      <div className="flex-1 ml-[6rem] lg:ml-[20%]">
-        <OwnerHeader className="border-b-2 border-gray-900 border-dotted" />
+      <div className="flex-1 ml-[5.5rem] lg:ml-[20%]">
+        <OwnerHeader />
         <div className="p-4">
-          <h1 className="text-3xl font-bold mb-4">Manage Clients</h1>
-          <ClientTable />
+          {/* Replace with your content */}
+          <p>Content area</p>
         </div>
       </div>
     </div>
@@ -45,4 +44,4 @@ const AgencyPage = () => {
   );
 };
 
-export default AgencyPage;
+export default OwnerSettingsPage;

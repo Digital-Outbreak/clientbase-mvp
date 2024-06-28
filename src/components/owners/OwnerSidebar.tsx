@@ -1,76 +1,87 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import {
-  HomeIcon,
-  LineChartIcon,
-  Package2Icon,
-  PackageIcon,
-  ShoppingCartIcon,
-  UsersIcon,
-} from "lucide-react";
+import { HomeIcon, Settings } from "lucide-react";
+import Image from "next/image";
 
-export default function OwnerSidebar({ owner }: { owner: Owner | null }) {
+type OwnerSidebarProps = {
+  owner: Owner;
+  active: "home" | "settings";
+};
+
+export default function OwnerSidebar({ owner, active }: OwnerSidebarProps) {
+  const navItems = [
+    {
+      href: `/${owner.companySlug}`,
+      icon: HomeIcon,
+      label: "Home",
+      active: active === "home",
+    },
+    {
+      href: `/${owner.companySlug}/settings`,
+      icon: Settings,
+      label: "Settings",
+      active: active === "settings",
+    },
+  ];
   return (
-    <div className="hidden border-r bg-muted/40 lg:block">
-      <div className="flex flex-col gap-2">
-        <div className="flex h-[60px] items-center px-6">
-          <Link
-            href="#"
-            className="flex items-center gap-2 font-semibold"
-            prefetch={false}
-          >
-            <Package2Icon className="h-6 w-6" />
-            <span className="">{owner?.companyName}</span>
-          </Link>
+    <div className="flex p-4 items-center border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
+      <div>
+        <div className="flex flex-row gap-5 items-center">
+          <Image
+            src={owner.companyIconUrl}
+            alt={owner.companyName}
+            width={50}
+            height={50}
+            className="rounded-full object-cover border-white border-2"
+            style={{ width: "50px", height: "50px" }}
+          />
+
+          <h1 className="hidden font-bold md:block text-2xl">
+            {owner.companyName}
+          </h1>
         </div>
-        <div className="flex-1">
-          <nav className="grid items-start px-4 text-sm font-medium">
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              prefetch={false}
-            >
-              <HomeIcon className="h-4 w-4" />
-              Home
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary  transition-all hover:text-primary"
-              prefetch={false}
-            >
-              <ShoppingCartIcon className="h-4 w-4" />
-              Orders{" "}
-              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                12
-              </Badge>
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              prefetch={false}
-            >
-              <PackageIcon className="h-4 w-4" />
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              prefetch={false}
-            >
-              <UsersIcon className="h-4 w-4" />
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-              prefetch={false}
-            >
-              <LineChartIcon className="h-4 w-4" />
-              Analytics
-            </Link>
-          </nav>
-        </div>
+
+        <nav className="mt-10 w-full">
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-none sm:flex sm:flex-col sm:gap-0">
+            {navItems.map((item, index) => (
+              <li key={index} className="mb-2">
+                <a
+                  href={item.href}
+                  className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
+                    item.active
+                      ? "bg-purple-950 text-white"
+                      : "hover:bg-purple-950 hover:text-white"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <item.icon className="w-6 h-6" />{" "}
+                    <span className="hidden lg:inline">{item.label}</span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
+
+      <div
+        className="p-4
+      bg-gradient-to-br from-purple-950 to-purple-900
+      rounded-lg flex-col hidden lg:flex"
+      >
+        <Badge className="w-fit" variant="secondary">
+          Note
+        </Badge>
+        <h1>This only a MVP</h1>
+        <p>
+          This is a MVP, some features may not work as expected. Please report
+          any issues to the owner.
+        </p>
+      </div>
+
+      <Badge className="block lg:hidden text-center rounded-sm">
+        MVP Version
+      </Badge>
     </div>
   );
 }
