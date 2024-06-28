@@ -1,28 +1,37 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
 import ClientForm from "./ClientForm";
 
-const AddClientDialog = ({ children }: { children: React.ReactNode }) => {
+const AddClientDialog = ({
+  children,
+  owner,
+}: {
+  children: React.ReactNode;
+  owner: Owner;
+}) => {
   return (
-    <Dialog>
-      <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-2xl">Create A New Client</DialogTitle>
-          <DialogDescription className="capitalize">
+    <Sheet>
+      <SheetTrigger>{children}</SheetTrigger>
+      <SheetContent
+        className={"lg:max-w-screen-lg  overflow-y-scroll max-h-screen"}
+      >
+        <SheetHeader>
+          <SheetTitle className="text-2xl">Create A New Client</SheetTitle>
+          <SheetDescription className="capitalize">
             Please Fill the form below to create a new client.
-          </DialogDescription>
-        </DialogHeader>
+          </SheetDescription>
+        </SheetHeader>
 
-        <ClientForm />
-      </DialogContent>
-    </Dialog>
+        <ClientForm owner={owner} />
+      </SheetContent>
+    </Sheet>
   );
 };
 

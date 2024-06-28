@@ -38,7 +38,7 @@ const AgencyPage = () => {
         <div className="p-4">
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold mb-4">Manage Clients</h1>
-            <AddClientDialog>
+            <AddClientDialog owner={owner}>
               <Button className="flex gap-1 items-center">
                 <PlusCircle className="h-6 w-6" /> Add New Client
               </Button>

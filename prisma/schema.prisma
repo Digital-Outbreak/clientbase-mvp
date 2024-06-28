@@ -42,6 +42,7 @@ model Client {
   loom          String
   password      String
   clientCompany String
+  clientSlug    String?  @unique
   companyName   String
   pfpUrl        String
   bannerUrl     String

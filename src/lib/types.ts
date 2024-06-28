@@ -22,6 +22,7 @@ interface Client {
   loom: string;
   password: string;
   clientCompany: string;
+  clientSlug: string | null;
   companyName: string;
   pfpUrl: string;
   bannerUrl: string;
