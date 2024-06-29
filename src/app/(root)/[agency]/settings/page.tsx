@@ -6,6 +6,7 @@ import { getOwnerBySlug } from "@/lib/db/owner-queries";
 import OwnerSidebar from "@/components/owners/OwnerSidebar";
 import OwnerHeader from "@/components/owners/OwnerHeader";
 import Loading from "@/components/global/loading";
+import AgencySettingsForm from "@/components/owners/AgencySettingsForm";
 
 const OwnerSettingsPage = () => {
   const [owner, setOwner] = useState<Owner>();
@@ -32,8 +33,8 @@ const OwnerSettingsPage = () => {
       <div className="flex-1 ml-[5.5rem] lg:ml-[20%]">
         <OwnerHeader />
         <div className="p-4">
-          {/* Replace with your content */}
-          <p>Content area</p>
+          <h1 className="text-3xl font-bold mb-4">Settings</h1>
+          <AgencySettingsForm owner={owner} />
         </div>
       </div>
     </div>
