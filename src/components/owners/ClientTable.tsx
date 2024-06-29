@@ -10,10 +10,14 @@ import {
 import { Button } from "../ui/button";
 import Moment from "react-moment";
 import { SettingsIcon } from "lucide-react";
+import Link from "next/link";
+import { generateCustomSlug } from "@/lib/data";
 
 type formClient = {
   name: string;
   email: string;
+  companySlug: string;
+  clientslug: string;
   createdAt: Date;
 };
 
@@ -21,6 +25,8 @@ const ClientTable = ({ client }: { client: Client[] }) => {
   const clients: formClient[] = client.map((client) => ({
     name: client.name,
     email: client.email,
+    companySlug: generateCustomSlug(client.companyName),
+    clientslug: client.clientSlug as string,
     createdAt: client.createdAt,
   }));
   return (
@@ -45,7 +51,9 @@ const ClientTable = ({ client }: { client: Client[] }) => {
                 <SettingsIcon className="w-6 h-6" />
               </Button>
               <Button variant="outline" className="border-purple-600">
-                Add Email
+                <Link href={`/${client.companySlug}/${client.clientslug}`}>
+                  Visit Portal
+                </Link>
               </Button>
             </TableCell>
           </TableRow>
