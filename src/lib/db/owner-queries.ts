@@ -1,8 +1,10 @@
 "use server";
 import { handleError } from "../utils";
 import prisma from "./db";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const getOwnerById = async (id: string): Promise<Owner | null> => {
+  noStore();
   try {
     const owner = await prisma.owner.findUnique({
       where: { id },
@@ -28,6 +30,8 @@ export const updateOwner = async (id: string, owner: any) => {
 };
 
 export const getOwnerBySlug = async (slug: string): Promise<Owner | null> => {
+  noStore();
+
   try {
     const owner: Owner | null = await prisma.owner.findFirst({
       where: { companySlug: slug },
