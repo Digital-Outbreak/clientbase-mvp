@@ -19,7 +19,6 @@ interface LoginPageProps {
 
 const LoginPage = ({ client, setLoggedIn }: LoginPageProps) => {
   const [loading, setLoading] = React.useState(false);
-  console.log([client.email, client.password]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -1,4 +1,6 @@
 "use client";
+import ClientSidebar from "@/components/clients/ClientSidebar";
+import ClientWelcome from "@/components/clients/ClientWelcome";
 import LoginPage from "@/components/clients/loginPage";
 import Loading from "@/components/global/loading";
 import { getClientBySlug } from "@/lib/db/client-queries";
@@ -21,7 +23,6 @@ const ClientPage = () => {
       fetchClient();
     }
 
-    // Check localStorage for login status
     const storedLoginStatus = localStorage.getItem("loggedIn");
     if (storedLoginStatus === "true") {
       setLoggedIn(true);
@@ -36,9 +37,14 @@ const ClientPage = () => {
   return client ? (
     <div>
       {loggedIn ? (
-        <div>
-          <h1>Welcome to {client.name}</h1>
-          <p>Here you can see all the details of the client</p>
+        <div className="flex h-screen">
+          <div className="lg:w-[20%] w-24 fixed h-full">
+            <ClientSidebar client={client} active="home" />
+          </div>
+
+          <div className="flex-1 ml-[6rem] lg:ml-[20%]">
+            <ClientWelcome client={client} />
+          </div>
         </div>
       ) : (
         <LoginPage client={client} setLoggedIn={setLoggedIn} />
