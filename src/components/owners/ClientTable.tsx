@@ -50,11 +50,11 @@ const ClientTable = ({ client }: { client: Client[] }) => {
               <Button variant="outline">
                 <SettingsIcon className="w-6 h-6" />
               </Button>
-              <Button variant="outline" className="border-purple-600">
-                <Link href={`/${client.companySlug}/${client.clientslug}`}>
+              <Link href={`/${client.companySlug}/${client.clientslug}`}>
+                <Button variant="outline" className="border-purple-600">
                   Visit Portal
-                </Link>
-              </Button>
+                </Button>
+              </Link>
             </TableCell>
           </TableRow>
         ))}

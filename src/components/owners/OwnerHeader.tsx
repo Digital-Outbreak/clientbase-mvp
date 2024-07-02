@@ -18,18 +18,22 @@ const OwnerHeader = ({ className }: { className?: string }) => {
       </Link>
       <nav>
         {!user.isSignedIn ? (
-          <Button
-            className="flex justify-center space-x-8 text-white"
-            size="lg"
-          >
-            <Link href="/sign-up">Sign Up</Link>
-          </Button>
+          <Link href="/sign-up">
+            <Button
+              className="flex justify-center space-x-8 text-white"
+              size="lg"
+            >
+              Sign Up
+            </Button>
+          </Link>
         ) : (
           <div className="flex justify-center gap-5">
             <UserButton />
-            <Button className="flex justify-center space-x-8 text-white">
-              <Link href="/dashboard">Dashboard</Link>
-            </Button>
+            <Link href="/dashboard">
+              <Button className="flex justify-center space-x-8 text-white">
+                Dashboard
+              </Button>
+            </Link>
           </div>
         )}
       </nav>
