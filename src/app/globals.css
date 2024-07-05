@@ -84,3 +84,31 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #6d2c7e; /* Darker shade of purple */
 }
+
+/* fading of the text */
+
+.fade-out {
+  position: relative;
+  overflow: hidden;
+}
+
+.fade-text {
+  max-height: 4.5rem; /* Adjust height based on the amount of text you want to show */
+  overflow: hidden;
+  position: relative;
+}
+
+.fade-text::after {
+  content: "";
+  z-index: 999;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3rem; /* Height of the fade effect */
+  background: linear-gradient(
+    to top,
+    /* make it blend in 0e0a26*/ rgba(14, 10, 38, 1),
+    rgba(14, 10, 38, 0.2)
+  );
+}
