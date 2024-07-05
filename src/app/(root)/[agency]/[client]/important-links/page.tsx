@@ -1,15 +1,11 @@
 "use client";
-import ClientSidebar from "@/components/clients/ClientSidebar";
-import ClientWelcome from "@/components/clients/ClientWelcome";
-import LoginPage from "@/components/clients/loginPage";
-import Loading from "@/components/global/loading";
+import ClientHeader from "@/components/clients/ClientHeader";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const ClientPage = () => {
+const ImportantLinks = () => {
   const [client, setClient] = useState<Client>();
-
   const params = useParams();
 
   useEffect(() => {
@@ -22,8 +18,17 @@ const ClientPage = () => {
       fetchClient();
     }
   }, [params.agency]);
-
-  return client && <ClientWelcome client={client} />;
+  return (
+    client && (
+      <div className="pb-8">
+        <ClientHeader
+          banner={client.bannerUrl}
+          companyName={client.companyName}
+          active="important-links"
+        />
+      </div>
+    )
+  );
 };
 
-export default ClientPage;
+export default ImportantLinks;

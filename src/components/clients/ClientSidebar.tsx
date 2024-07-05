@@ -22,9 +22,7 @@ type ClientSidebarProps = {
 };
 
 export default function ClientSidebar({ client, active }: ClientSidebarProps) {
-  const slugBefore = `${generateCustomSlug(client.clientCompany)}/${
-    client.clientSlug
-  }`;
+  const slugBefore = `${generateCustomSlug(client.clientCompany)}`;
   const navItems = [
     {
       href: `${slugBefore}/`,
@@ -39,13 +37,13 @@ export default function ClientSidebar({ client, active }: ClientSidebarProps) {
       active: active === "important-links",
     },
     {
-      href: `${slugBefore}/file-manager`,
+      href: `/file-manager`,
       icon: Folder,
       label: "File Manager",
       active: active === "file-manager",
     },
     {
-      href: `${slugBefore}/project-manager`,
+      href: `/project-manager`,
       icon: CircleCheckBig,
       label: "Project Manager",
       active: active === "project-manager",
@@ -97,7 +95,7 @@ export default function ClientSidebar({ client, active }: ClientSidebarProps) {
 
       <div className="mb-2">
         <a
-          href={`${slugBefore}/messages`}
+          href={`/messages`}
           className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
             active == "message"
               ? "bg-purple-950 text-white"
