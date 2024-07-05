@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import ClientHeader from "./ClientHeader";
 import { oembed } from "@loomhq/loom-embed";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ClientWelcome = ({ client }: { client: Client }) => {
   const [videoEmbedHtml, setVideoEmbedHtml] = useState<string | null>(null);
@@ -10,8 +11,6 @@ const ClientWelcome = ({ client }: { client: Client }) => {
     const fetchLoomVideo = async () => {
       try {
         const { html } = await oembed(client.loom, {
-          hideOwner: true,
-          height: 200,
           gifThumbnail: true,
         });
         setVideoEmbedHtml(html);
@@ -24,7 +23,7 @@ const ClientWelcome = ({ client }: { client: Client }) => {
   }, [client.loom]);
 
   return (
-    <div>
+    <div className="pb-8">
       <ClientHeader
         banner={client.bannerUrl}
         companyName={client.companyName}
@@ -38,10 +37,13 @@ const ClientWelcome = ({ client }: { client: Client }) => {
         </p>
         <div className="mt-5">
           {videoEmbedHtml && (
-            <div dangerouslySetInnerHTML={{ __html: videoEmbedHtml }} />
+            <div
+              className="loom-video rounded-lg overflow-hidden shadow-lg border border-gray-800 px-2 
+              "
+              dangerouslySetInnerHTML={{ __html: videoEmbedHtml }}
+            />
           )}
         </div>
-        h
       </div>
     </div>
   );
