@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "easymde/dist/easymde.min.css";
 import { DM_Sans as FontSans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/providers/theme-provider";

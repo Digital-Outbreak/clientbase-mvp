@@ -13,3 +13,14 @@ export const handleError = async (err: any) => {
 
   toast.error(errorMessage);
 };
+
+export const showToast = (message: string) => {
+  toast(message, {
+    icon: "🚀",
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+    },
+  });
+};

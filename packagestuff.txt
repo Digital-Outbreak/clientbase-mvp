@@ -1,0 +1,2 @@
+    "postinstall": "prisma generate",
+    "lint": "next lint"
