@@ -45,14 +45,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
     return <LoginPage client={client} setLoggedIn={setLoggedIn} />;
   }
 
-  return (
-    <div className="flex h-screen">
-      <div className="lg:w-[20%] w-24 fixed h-full">
-        <ClientSidebar client={client} active="home" />
-      </div>
-      <div className="flex-1 ml-[6rem] lg:ml-[20%]">{children}</div>
-    </div>
-  );
+  return <div>{children}</div>;
 };
 
 export default RootLayout;

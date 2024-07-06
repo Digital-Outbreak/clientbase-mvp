@@ -21,39 +21,39 @@ type ClientSidebarProps = {
     | "message";
 };
 
-export default function ClientSidebar({ client, active }: ClientSidebarProps) {
-  const slugBefore = `${generateCustomSlug(client.clientCompany)}`;
+const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
+  const agencySlug = generateCustomSlug(client.companyName);
+  const clientSlug = generateCustomSlug(client.clientCompany);
+
   const navItems = [
     {
-      href: `${slugBefore}/`,
+      href: `/${agencySlug}/${clientSlug}`,
       icon: HomeIcon,
       label: "Home",
-      active: active === "home",
+      actived: "home",
     },
     {
-      href: `${slugBefore}/important-links`,
+      href: `/${agencySlug}/${clientSlug}/important-links`,
       icon: Link2,
       label: "Important Links",
-      active: active === "important-links",
+      actived: "important-links",
     },
     {
-      href: `/file-manager`,
+      href: `/${agencySlug}/file-manager`,
       icon: Folder,
       label: "File Manager",
-      active: active === "file-manager",
+      actived: "file-manager",
     },
     {
-      href: `/project-manager`,
+      href: `/${agencySlug}/project-manager`,
       icon: CircleCheckBig,
       label: "Project Manager",
-      active: active === "project-manager",
+      actived: "project-manager",
     },
   ];
+
   return (
-    <div
-      className="flex p-4 items-center bg-background z-[999] border-r-2 border-gray-900 flex-col border-dotted 
-    h-screen justify-between"
-    >
+    <div className="flex p-4 items-center bg-background z-[999] border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
       <div>
         <div className="flex flex-row justify-center gap-3 items-center">
           <Image
@@ -64,50 +64,53 @@ export default function ClientSidebar({ client, active }: ClientSidebarProps) {
             className="rounded-full object-cover border-white border-2"
             style={{ width: "40px", height: "40px" }}
           />
-
           <h1 className="hidden md:block text-3xl font-semibold">
             {client.clientCompany}
           </h1>
         </div>
-
         <nav className="mt-10 w-full">
           <ul className="grid grid-cols-1 gap-4 sm:grid-cols-none sm:flex sm:flex-col sm:gap-0">
-            {navItems.map((item, index) => (
-              <li key={index} className="mb-2">
-                <a
-                  href={item.href}
-                  className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
-                    item.active
-                      ? "bg-purple-950 text-white"
-                      : "hover:bg-purple-950 hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <item.icon className="w-6 h-6" />{" "}
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
+            {navItems.map((item, index) => {
+              return (
+                <li key={index} className="mb-2">
+                  <Link href={item.href} legacyBehavior>
+                    <a
+                      className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
+                        active === item.actived
+                          ? "bg-purple-950 text-white"
+                          : "hover:bg-purple-950 hover:text-white"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <item.icon className="w-6 h-6" />{" "}
+                        <span className="hidden lg:inline">{item.label}</span>
+                      </div>
+                    </a>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
       </div>
-
       <div className="mb-2">
-        <a
-          href={`/messages`}
-          className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
-            active == "message"
-              ? "bg-purple-950 text-white"
-              : "hover:bg-purple-950 hover:text-white"
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <MessageCircleMore className="w-7 h-7" />{" "}
-            <span className="hidden lg:inline">Messages</span>
-          </div>
-        </a>
+        <Link href={`/${agencySlug}/messages`} legacyBehavior>
+          <a
+            className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
+              active === "message"
+                ? "bg-purple-950 text-white"
+                : "hover:bg-purple-950 hover:text-white"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <MessageCircleMore className="w-7 h-7" />{" "}
+              <span className="hidden lg:inline">Messages</span>
+            </div>
+          </a>
+        </Link>
       </div>
     </div>
   );
-}
+};
+
+export default ClientSidebar;

@@ -17,6 +17,11 @@ import { updateImportantLink } from "@/lib/db/client-queries";
 import { showToast } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
+type Client = {
+  id: string;
+  links: string[];
+};
+
 const EditImportantLinkDialog = ({
   children,
   index,
@@ -27,13 +32,14 @@ const EditImportantLinkDialog = ({
   index: number;
 }) => {
   const router = useRouter();
-  const [link, setLink] = useState<string>(client.links[index] || "");
+  const [clientLinks, setClientLinks] = useState<string[]>(client.links);
 
-  const handleLinkChange = (value: string) => {
-    setLink(value);
+  const handleLinkChange = (links: string[]) => {
+    setClientLinks(links);
   };
 
   const updateLink = async () => {
+    const link = clientLinks[index];
     if (!link) {
       showToast("Please add a link to continue");
       return;
@@ -42,7 +48,6 @@ const EditImportantLinkDialog = ({
     const newLink = await updateImportantLink(link, client.id, index);
     if (newLink) {
       showToast("Link updated successfully");
-      setLink("");
       router.replace(window.location.pathname);
     }
   };
@@ -57,7 +62,11 @@ const EditImportantLinkDialog = ({
             Please fill out the form below to update the link.
           </DialogDescription>
         </DialogHeader>
-        <LinkEditor index={index} client={client} setValue={handleLinkChange} />
+        <LinkEditor
+          index={index}
+          client={{ ...client, links: clientLinks }}
+          setClientLinks={handleLinkChange}
+        />
         <DialogFooter>
           <DialogClose>
             <Button variant="destructive">Cancel</Button>

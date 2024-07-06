@@ -1,6 +1,7 @@
 "use client";
 import ClientHeader from "@/components/clients/ClientHeader";
 import ClientImportantLinks from "@/components/clients/ClientImportantLinks";
+import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -21,14 +22,21 @@ const ImportantLinks = () => {
   }, [params.agency]);
   return (
     client && (
-      <div className="pb-8">
-        <ClientHeader
-          banner={client.bannerUrl}
-          companyName={client.companyName}
-          active="important-links"
-        />
-        <div className="mt-24">
-          <ClientImportantLinks client={client} />
+      <div className="flex h-screen">
+        <div className="lg:w-[20%] w-24 fixed h-full">
+          <ClientSidebar client={client} active="important-links" />
+        </div>
+        <div className="flex-1 ml-[6rem] lg:ml-[20%]">
+          <div className="pb-8">
+            <ClientHeader
+              banner={client.bannerUrl}
+              companyName={client.companyName}
+              active="important-links"
+            />
+            <div className="mt-24">
+              <ClientImportantLinks client={client} />
+            </div>
+          </div>
         </div>
       </div>
     )

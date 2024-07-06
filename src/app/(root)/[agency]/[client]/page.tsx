@@ -23,7 +23,18 @@ const ClientPage = () => {
     }
   }, [params.agency]);
 
-  return client && <ClientWelcome client={client} />;
+  return (
+    client && (
+      <div className="flex h-screen">
+        <div className="lg:w-[20%] w-24 fixed h-full">
+          <ClientSidebar client={client} active="home" />
+        </div>
+        <div className="flex-1 ml-[6rem] lg:ml-[20%]">
+          <ClientWelcome client={client} />;
+        </div>
+      </div>
+    )
+  );
 };
 
 export default ClientPage;

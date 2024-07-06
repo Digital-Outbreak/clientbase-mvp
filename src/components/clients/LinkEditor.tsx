@@ -1,18 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import SimpleMDE from "react-simplemde-editor";
 
-type LinkEditorProps = {
-  index?: number;
-  client: Client;
-  setValue: (value: string) => void;
+type Client = {
+  links: string[];
 };
 
-const LinkEditor = ({ index = 0, client, setValue }: LinkEditorProps) => {
+type LinkEditorProps = {
+  index: number;
+  client: Client;
+  setClientLinks: (links: string[]) => void;
+};
+
+const LinkEditor = ({ index, client, setClientLinks }: LinkEditorProps) => {
+  const [value, setValue] = useState(client.links[index] || "");
+
+  useEffect(() => {
+    setValue(client.links[index] || "");
+  }, [client.links, index]);
+
+  const handleChange = (val: string) => {
+    setValue(val);
+    const newLinks = [...client.links];
+    newLinks[index] = val;
+    setClientLinks(newLinks);
+  };
+
   return (
     <div className="z-[99]">
       <SimpleMDE
-        value={client.links[index] || ""}
-        onChange={setValue}
+        key={index}
+        id={`link-editor-${index}`}
+        value={value}
+        onChange={handleChange}
         options={{
           maxHeight: "400px",
           spellChecker: false,
