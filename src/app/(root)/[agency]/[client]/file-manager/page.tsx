@@ -6,12 +6,7 @@ import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const ClientImportantLinks = dynamic(
-  () => import("@/components/clients/ClientImportantLinks"),
-  { ssr: false }
-);
-
-const ImportantLinksPage = () => {
+const FileManagerPage = () => {
   const [client, setClient] = useState<Client>();
   const params = useParams();
 
@@ -30,18 +25,16 @@ const ImportantLinksPage = () => {
     client && (
       <div className="flex h-screen">
         <div className="lg:w-[20%] w-24 fixed h-full">
-          <ClientSidebar client={client} active="important-links" />
+          <ClientSidebar client={client} active="file-manager" />
         </div>
         <div className="flex-1 ml-[6rem] lg:ml-[20%]">
           <div className="pb-8">
             <ClientHeader
               banner={client.bannerUrl}
               companyName={client.companyName}
-              active="important-links"
+              active="file-manager"
             />
-            <div className="mt-24">
-              <ClientImportantLinks client={client} />
-            </div>
+            <div className="mt-24">File Manager</div>
           </div>
         </div>
       </div>
@@ -49,4 +42,4 @@ const ImportantLinksPage = () => {
   );
 };
 
-export default ImportantLinksPage;
+export default FileManagerPage;

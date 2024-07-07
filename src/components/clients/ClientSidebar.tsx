@@ -39,16 +39,22 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
       actived: "important-links",
     },
     {
-      href: `/${agencySlug}/file-manager`,
+      href: `/${agencySlug}/${clientSlug}/file-manager`,
       icon: Folder,
       label: "File Manager",
       actived: "file-manager",
     },
     {
-      href: `/${agencySlug}/project-manager`,
+      href: `/${agencySlug}/${clientSlug}/project-manager`,
       icon: CircleCheckBig,
       label: "Project Manager",
       actived: "project-manager",
+    },
+    {
+      href: `/${agencySlug}/${clientSlug}/messages`,
+      icon: MessageCircleMore,
+      label: "Messages",
+      actived: "message",
     },
   ];
 
