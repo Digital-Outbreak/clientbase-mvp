@@ -11,7 +11,13 @@ export const handleError = async (err: any) => {
   const errorMessage =
     err.message || String(err) || "An unexpected error occurred";
 
-  toast.error(errorMessage);
+  toast.error(errorMessage, {
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+    },
+  });
 };
 
 export const showToast = (message: string) => {
