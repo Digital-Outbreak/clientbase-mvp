@@ -17,11 +17,6 @@ import { updateImportantLink } from "@/lib/db/client-queries";
 import { showToast } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
-type Client = {
-  id: string;
-  links: string[];
-};
-
 const EditImportantLinkDialog = ({
   children,
   index,
@@ -48,7 +43,9 @@ const EditImportantLinkDialog = ({
     const newLink = await updateImportantLink(link, client.id, index);
     if (newLink) {
       showToast("Link updated successfully");
-      router.replace(window.location.pathname);
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
     }
   };
 

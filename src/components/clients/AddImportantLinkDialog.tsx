@@ -24,24 +24,27 @@ const AddImportantLinkDialog = ({
   client: Client;
 }) => {
   const router = useRouter();
-  const [links, setLinks] = useState<string>();
+  const [link, setLink] = useState<string>("");
 
   const addLink = async () => {
-    if (!links) return showToast("Please add a link to continue");
-    const newLink = await createImportantLink(links, client.id);
+    if (!link) {
+      showToast("Please add a link to continue");
+      return;
+    }
+    const newLink = await createImportantLink(link, client.id);
     if (newLink) {
       showToast("Link added successfully");
-      setLinks("");
-
-      router.replace(window.location.pathname);
+      setLink("");
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
     }
   };
+
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent
-        className={"lg:max-w-screen-lg overflow-y-scroll max-h-screen"}
-      >
+      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen">
         <DialogHeader>
           <DialogTitle className="text-2xl">Add A New Link</DialogTitle>
           <DialogDescription className="capitalize">
@@ -49,7 +52,7 @@ const AddImportantLinkDialog = ({
             password or live links, etc.
           </DialogDescription>
         </DialogHeader>
-        <LinkEditor setValue={setLinks} />
+        <LinkEditor setValue={setLink} />
         <DialogFooter>
           <DialogClose>
             <Button variant="destructive">Cancel</Button>

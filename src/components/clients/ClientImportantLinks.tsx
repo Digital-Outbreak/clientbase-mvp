@@ -27,7 +27,7 @@ const ClientImportantLinks = ({ client }: { client: Client }) => {
             border border-primary/20 hover:shadow-lg transition duration-300 ease-in-out
             fade-out"
           >
-            <div className="w-full min-h-10 fade-text">
+            <div className="w-full h-full fade-text">
               <p className="text-sm text-gray-50">
                 <ReactMarkdown
                   components={{

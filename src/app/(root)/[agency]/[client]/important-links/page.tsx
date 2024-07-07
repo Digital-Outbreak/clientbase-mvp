@@ -1,10 +1,15 @@
 "use client";
 import ClientHeader from "@/components/clients/ClientHeader";
-import ClientImportantLinks from "@/components/clients/ClientImportantLinks";
+import dynamic from "next/dynamic";
 import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+
+const ClientImportantLinks = dynamic(
+  () => import("@/components/clients/ClientImportantLinks"),
+  { ssr: false }
+);
 
 const ImportantLinks = () => {
   const [client, setClient] = useState<Client>();
@@ -20,6 +25,7 @@ const ImportantLinks = () => {
       fetchClient();
     }
   }, [params.agency]);
+
   return (
     client && (
       <div className="flex h-screen">
