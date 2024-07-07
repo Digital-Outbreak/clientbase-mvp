@@ -18,7 +18,7 @@ import { useState } from "react";
 import { defaultBannerUrl, defaultLoomLink } from "@/lib/data";
 import { createClient } from "@/lib/db/owner-queries";
 
-const clientFormScehma = z.object({
+const clientFormSchema = z.object({
   clientName: z.string().min(2, {
     message: "Client name must be at least 2 characters.",
   }),
@@ -32,29 +32,32 @@ const clientFormScehma = z.object({
     message: "Company slug must be at least 2 characters.",
   }),
   loomVideo: z.string().default(defaultLoomLink).optional(),
-
   clientPassword: z.string().min(6, {
-    message: "Password must be at least 5 characters.",
+    message: "Password must be at least 6 characters.",
   }),
 });
 
 const ClientForm = ({ owner }: { owner: Owner }) => {
   const router = useRouter();
-  const [clientIconUrl, setClientIconUrl] = useState<string>("" as string);
+  const [clientIconUrl, setClientIconUrl] = useState<string>("");
   const [bannerUrl] = useState<string>(defaultBannerUrl);
-  const form = useForm<z.infer<typeof clientFormScehma>>({
-    resolver: zodResolver(clientFormScehma),
+  const form = useForm<z.infer<typeof clientFormSchema>>({
+    resolver: zodResolver(clientFormSchema),
     defaultValues: {
       clientName: "",
       clientEmail: "",
       clientCompany: "",
-      loomVideo: "",
+      clientSlug: "",
+      loomVideo: defaultLoomLink,
       clientPassword: "",
     },
   });
 
   const generateSlug = () => {
-    if (!form.getValues("clientCompany")) alert("Please enter a company name.");
+    if (!form.getValues("clientCompany")) {
+      alert("Please enter a company name.");
+      return;
+    }
     const companyName = form.getValues("clientCompany");
     const slug = companyName
       .toLowerCase()
@@ -67,8 +70,12 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
     const password = Math.random().toString(36).slice(-8);
     form.setValue("clientPassword", password);
   };
-  const onSubmit = (data: z.infer<typeof clientFormScehma>) => {
-    if (!clientIconUrl) return alert("Please upload a client logo.");
+
+  const onSubmit = async (data: z.infer<typeof clientFormSchema>) => {
+    if (!clientIconUrl) {
+      alert("Please upload a client logo.");
+      return;
+    }
     const client = {
       name: data.clientName,
       email: data.clientEmail,
@@ -78,14 +85,18 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
       companyName: owner.companyName,
       pfpUrl: clientIconUrl,
       bannerUrl: bannerUrl,
-      loom: data.loomVideo ? data.loomVideo : defaultLoomLink,
+      loom: data.loomVideo || defaultLoomLink,
       ownerId: owner.id,
     };
-    createClient(client).then((res) => {
+    try {
+      const res = await createClient(client);
       if (res) {
         router.push(`/${owner.companySlug}/${client.clientSlug}`);
       }
-    });
+    } catch (error: any) {
+      handleError(error);
+      alert(`Error: ${error.message}`);
+    }
   };
 
   return (
@@ -93,7 +104,7 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <UploadDropzone
           endpoint="imageUploader"
-          className="border-primary border-2  py-6 rounded-md"
+          className="border-primary border-2 py-6 rounded-md"
           appearance={{
             uploadIcon: "text-foreground text-4xl",
             button: "bg-primary text-primary-foreground",
@@ -110,7 +121,7 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
             handleError(error);
             alert(`ERROR! ${error.message}`);
           }}
-        />{" "}
+        />
         <FormField
           control={form.control}
           name="clientName"
@@ -163,6 +174,7 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
                     {...field}
                   />
                   <Button
+                    type="button"
                     disabled={form.formState.isSubmitting}
                     onClick={generatePassword}
                   >
@@ -198,7 +210,6 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
         <FormField
           control={form.control}
           name="clientSlug"
-          defaultValue=""
           render={({ field }) => (
             <FormItem>
               <FormLabel>Company Slug</FormLabel>
@@ -210,6 +221,7 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
                     {...field}
                   />
                   <Button
+                    type="button"
                     disabled={form.formState.isSubmitting}
                     onClick={generateSlug}
                   >
@@ -217,7 +229,6 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
                   </Button>
                 </div>
               </FormControl>
-
               <FormMessage>
                 {form.formState.errors.clientSlug?.message}
               </FormMessage>
@@ -244,7 +255,9 @@ const ClientForm = ({ owner }: { owner: Owner }) => {
           )}
         />
         <div className="flex justify-center mt-6">
-          <Button type="submit">Submit</Button>
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+          </Button>
         </div>
       </form>
     </Form>

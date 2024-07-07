@@ -1,3 +1,5 @@
+// server functions
+
 "use server";
 import { handleError } from "../utils";
 import prisma from "./db";
@@ -51,7 +53,18 @@ export const createClient = async (client: any) => {
   try {
     const newClient = await prisma.client.create({
       data: {
-        ...client,
+        name: client.name,
+        email: client.email,
+        companyName: client.companyName,
+        clientSlug: client.clientSlug,
+        loom: client.loom,
+        password: client.password,
+        pfpUrl: client.pfpUrl,
+        bannerUrl: client.bannerUrl,
+        ownerId: client.ownerId,
+        clientCompany: client.clientCompany,
+        files: [],
+        links: [],
       },
     });
     return newClient;
