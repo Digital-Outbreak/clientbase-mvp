@@ -1,8 +1,6 @@
 "use client";
 import ClientSidebar from "@/components/clients/ClientSidebar";
 import ClientWelcome from "@/components/clients/ClientWelcome";
-import LoginPage from "@/components/clients/loginPage";
-import Loading from "@/components/global/loading";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -30,7 +28,7 @@ const ClientPage = () => {
           <ClientSidebar client={client} active="home" />
         </div>
         <div className="flex-1 ml-[6rem] lg:ml-[20%]">
-          <ClientWelcome client={client} />;
+          <ClientWelcome client={client} />
         </div>
       </div>
     )

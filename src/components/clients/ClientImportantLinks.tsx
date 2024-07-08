@@ -60,7 +60,7 @@ const ClientImportantLinks = ({ client }: { client: Client }) => {
             </div>
           ))
         ) : (
-          <div className="text-center  text-gray-50">
+          <div className="text-center   text-gray-50">
             No important links added yet.
           </div>
         )}

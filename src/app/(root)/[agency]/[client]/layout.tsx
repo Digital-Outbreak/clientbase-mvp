@@ -23,15 +23,20 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
       fetchClient();
     }
 
-    const storedLoginStatus = localStorage.getItem("loggedIn");
-    if (storedLoginStatus === "true") {
-      setLoggedIn(true);
+    if (client) {
+      const storedLoginStatus = localStorage.getItem(
+        `${client?.clientSlug}-loggedIn`
+      );
+      if (storedLoginStatus === "true") {
+        setLoggedIn(true);
+      }
     }
-  }, [params.client]);
+  }, [params.client, client]);
 
   useEffect(() => {
-    localStorage.setItem("loggedIn", loggedIn.toString());
-  }, [loggedIn]);
+    if (!client) return;
+    localStorage.setItem(`${client?.clientSlug}-loggedIn`, loggedIn.toString());
+  }, [loggedIn, client]);
 
   if (!client) {
     return (

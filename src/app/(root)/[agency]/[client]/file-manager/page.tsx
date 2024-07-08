@@ -5,6 +5,7 @@ import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import ClientFileManager from "@/components/clients/ClientFileManager";
 
 const FileManagerPage = () => {
   const [client, setClient] = useState<Client>();
@@ -34,7 +35,9 @@ const FileManagerPage = () => {
               companyName={client.companyName}
               active="file-manager"
             />
-            <div className="mt-24">File Manager</div>
+            <div className="mt-24">
+              <ClientFileManager client={client} />
+            </div>
           </div>
         </div>
       </div>

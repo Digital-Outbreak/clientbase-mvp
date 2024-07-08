@@ -50,12 +50,6 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
       label: "Project Manager",
       actived: "project-manager",
     },
-    {
-      href: `/${agencySlug}/${clientSlug}/messages`,
-      icon: MessageCircleMore,
-      label: "Messages",
-      actived: "message",
-    },
   ];
 
   return (
@@ -100,7 +94,12 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
         </nav>
       </div>
       <div className="mb-2">
-        <Link href={`/${agencySlug}/messages`} legacyBehavior>
+        <Link
+          href={`
+          /${agencySlug}/${clientSlug}/settings
+          `}
+          legacyBehavior
+        >
           <a
             className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
               active === "message"
