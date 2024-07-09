@@ -32,7 +32,9 @@ interface Client {
   updatedAt: Date;
 }
 interface FileData {
+  id: string;
   name: string;
   url: string;
   createdAt: string;
+  clientId: string;
 }

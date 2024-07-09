@@ -79,27 +79,21 @@ export const updateImportantLink = async (
     return null;
   }
 };
-export const updateFiles = async (client: Client, files: File[]) => {
+
+export const updateFiles = async (client: Client, tempFiles: FileData[]) => {
   try {
-    for (const file of files) {
-      const fileName = `${client.companyName}/${client.clientCompany}/${file.name}`;
-      const { data, error: uploadError } = await supabase.storage
-        .from("file-manager")
-        .upload(fileName, file, {
-          cacheControl: "3600",
-          upsert: true,
-        });
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const url = supabase.storage.from("file-manager").getPublicUrl(fileName)
-        .data.publicUrl;
-      const createdAt = new Date().toISOString();
+    for (const file of tempFiles) {
+      const form = prisma.formData.create({
+        data: {
+          name: file.name,
+          url: file.url,
+          clientId: client.id,
+        },
+      });
+      return form;
     }
-  } catch (error: any) {
-    console.error("Error updating files: ", error.message);
-    return false;
+  } catch (error) {
+    console.error("Error updating files:", error);
+    return null; // or handle error as needed
   }
 };

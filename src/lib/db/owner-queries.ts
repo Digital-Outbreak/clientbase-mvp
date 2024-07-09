@@ -50,6 +50,7 @@ export const getOwnerBySlug = async (slug: string): Promise<Owner | null> => {
 };
 
 export const createClient = async (client: any) => {
+  const files = [] as FileData[];
   try {
     const newClient = await prisma.client.create({
       data: {
@@ -63,8 +64,8 @@ export const createClient = async (client: any) => {
         bannerUrl: client.bannerUrl,
         ownerId: client.ownerId,
         clientCompany: client.clientCompany,
-        files: [],
         links: [],
+        files: { create: files },
       },
     });
     return newClient;
