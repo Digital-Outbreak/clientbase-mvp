@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 import { EllipsisVertical, PlusSquareIcon } from "lucide-react";
 import Image from "next/image";
@@ -6,8 +7,33 @@ import { showToast } from "@/lib/utils";
 import Moment from "react-moment";
 
 import ClientUploadImageDialog from "./ClientUploadFileDialog";
+import { getUploadedFiles } from "@/lib/db/client-queries";
 
 const ClientFileManager = ({ client }: { client: Client }) => {
+  const [files, setFiles] = React.useState<FileData[] | null>(null);
+
+  useEffect(() => {
+    const fetchFiles = async () => {
+      try {
+        const res = await getUploadedFiles(client.id);
+        if (res) {
+          const formattedFiles = res.map((file) => ({
+            ...file,
+            createdAt: file.createdAt.toString(),
+            clientId: file.clientId || "", // Ensure clientId is always a string
+          }));
+          setFiles(formattedFiles);
+        } else {
+          throw new Error("Error fetching files");
+        }
+      } catch (error: any) {
+        showToast(error);
+      }
+    };
+
+    fetchFiles();
+  }, []);
+
   if (!client) {
     return (
       <div className="p-4">
@@ -24,9 +50,9 @@ const ClientFileManager = ({ client }: { client: Client }) => {
     );
   }
 
-  // Check if client.files is defined and has length before mapping
+  // Check if files is defined and has length before mapping
   const renderFiles = () => {
-    if (!client.files || client.files.length === 0) {
+    if (!files || files.length === 0) {
       return (
         <div>
           <p className="text-gray-400 text-sm">
@@ -36,7 +62,7 @@ const ClientFileManager = ({ client }: { client: Client }) => {
       );
     }
 
-    return client.files.map((file, index) => (
+    return files.map((file, index) => (
       <div
         key={index} // Ensure each item has a unique key
         className="bg-primary/10 shadow-md rounded-lg p-3 flex flex-col justify-between items-start gap-4 border border-primary/20 hover:shadow-lg transition duration-300 ease-in-out cursor-pointer"
@@ -46,7 +72,9 @@ const ClientFileManager = ({ client }: { client: Client }) => {
             src={file.url}
             width={500}
             height={100}
-            className="rounded-lg object-cover"
+            className="rounded-lg object-cover
+              h-40 w-full
+            "
             alt="File"
           />
           <div className="flex justify-between items-start w-full">

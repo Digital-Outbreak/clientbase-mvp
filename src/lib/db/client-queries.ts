@@ -83,17 +83,29 @@ export const updateImportantLink = async (
 export const updateFiles = async (client: Client, tempFiles: FileData[]) => {
   try {
     for (const file of tempFiles) {
-      const form = prisma.formData.create({
+      await prisma.formData.create({
         data: {
           name: file.name,
           url: file.url,
           clientId: client.id,
         },
       });
-      return form;
     }
+    return true;
   } catch (error) {
     console.error("Error updating files:", error);
     return null; // or handle error as needed
+  }
+};
+
+export const getUploadedFiles = async (clientId: string) => {
+  try {
+    const files = await prisma.formData.findMany({
+      where: { clientId },
+    });
+    return files;
+  } catch (error: any) {
+    console.error(`Error getting files: ${error.message}`);
+    return null;
   }
 };
