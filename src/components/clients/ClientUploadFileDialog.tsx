@@ -14,6 +14,7 @@ import UploadForm from "./UploadForm";
 import { useState } from "react";
 import { supabase } from "@/lib/db/db";
 import { showToast } from "@/lib/utils";
+import { updateFiles } from "@/lib/db/client-queries";
 const ClientUploadImageDialog = ({
   children,
   client,
@@ -27,24 +28,22 @@ const ClientUploadImageDialog = ({
   const uploadImages = async () => {
     setLoading(true);
     try {
-      for (const file of files) {
-        const fileName = `${client.companyName}/${client.clientCompany}/${file.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from("file-manager")
-          .upload(fileName, file, {
-            cacheControl: "3600",
-            upsert: true,
-          });
-        if (uploadError) throw uploadError;
-      }
-      setFiles([]);
-      showToast("Files uploaded successfully");
-      if (typeof window !== "undefined") {
-        window.location.reload();
+      const updateSuccess = await updateFiles(client, files);
+
+      if (updateSuccess) {
+        setFiles([]);
+        showToast("Files uploaded successfully");
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      } else {
+        showToast("Error updating files in the database");
       }
     } catch (error: any) {
       console.error("Error uploading file: ", error.message);
       showToast("Error uploading file");
+    } finally {
+      setLoading(false);
     }
   };
 

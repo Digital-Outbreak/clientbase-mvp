@@ -26,8 +26,13 @@ interface Client {
   companyName: string;
   pfpUrl: string;
   bannerUrl: string;
-  files: string[];
+  files: FileData[];
   links: string[];
   createdAt: Date;
   updatedAt: Date;
+}
+interface FileData {
+  name: string;
+  url: string;
+  createdAt: string;
 }

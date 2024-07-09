@@ -1,5 +1,5 @@
 "use server";
-import prisma from "./db";
+import prisma, { supabase } from "./db";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const getClientsByOwner = async (ownerId: string) => {
@@ -52,7 +52,6 @@ export const updateImportantLink = async (
   index: number
 ) => {
   try {
-    // Retrieve the current links array
     const client = await prisma.client.findUnique({
       where: { id: clientId },
       select: { links: true },
@@ -62,7 +61,6 @@ export const updateImportantLink = async (
       throw new Error("Client not found or links not defined");
     }
 
-    // Copy the current links and update the specified index
     const updatedLinks = [...client.links];
     if (index >= 0 && index < updatedLinks.length) {
       updatedLinks[index] = link;
@@ -70,7 +68,6 @@ export const updateImportantLink = async (
       throw new Error("Index out of bounds");
     }
 
-    // Update the client with the modified links array
     const updatedClient = await prisma.client.update({
       where: { id: clientId },
       data: { links: updatedLinks },
@@ -80,5 +77,29 @@ export const updateImportantLink = async (
   } catch (error: any) {
     console.error(`Error updating link: ${error.message}`);
     return null;
+  }
+};
+export const updateFiles = async (client: Client, files: File[]) => {
+  try {
+    for (const file of files) {
+      const fileName = `${client.companyName}/${client.clientCompany}/${file.name}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from("file-manager")
+        .upload(fileName, file, {
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const url = supabase.storage.from("file-manager").getPublicUrl(fileName)
+        .data.publicUrl;
+      const createdAt = new Date().toISOString();
+    }
+  } catch (error: any) {
+    console.error("Error updating files: ", error.message);
+    return false;
   }
 };
