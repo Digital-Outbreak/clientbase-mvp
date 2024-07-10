@@ -5,6 +5,7 @@ import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import ClientProjectManager from "@/components/clients/ClientProjectManager";
 
 const ProjectManagerPage = () => {
   const [client, setClient] = useState<Client>();
@@ -34,7 +35,9 @@ const ProjectManagerPage = () => {
               companyName={client.companyName}
               active="project-manager"
             />
-            <div className="mt-24">Project Manager</div>
+            <div className="mt-24">
+              <ClientProjectManager />
+            </div>
           </div>
         </div>
       </div>
