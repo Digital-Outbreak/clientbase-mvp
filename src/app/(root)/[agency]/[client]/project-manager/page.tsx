@@ -1,11 +1,9 @@
 "use client";
 import ClientHeader from "@/components/clients/ClientHeader";
-import dynamic from "next/dynamic";
 import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import ClientProjectManager from "@/components/clients/ClientProjectManager";
 
 const ProjectManagerPage = () => {
   const [client, setClient] = useState<Client>();

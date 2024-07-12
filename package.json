@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev --experimental-https",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "prisma generate",
+    "lint": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.1.6",
