@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
+import { Badge } from "../ui/badge";
 
 const OwnerHeader = ({ className }: { className?: string }) => {
   const user = useUser();
@@ -12,9 +13,10 @@ const OwnerHeader = ({ className }: { className?: string }) => {
     <div className={`p-6 shadow-md flex justify-between z-[999] ${className}`}>
       <Link
         href="/"
-        className="flex justify-center mb-4 hover:opacity-80 transition duration-300 ease-in-out"
+        className="flex relative justify-center mb-4 hover:opacity-80 transition duration-300 ease-in-out"
       >
         <Image src={logo} alt="logo" width={200} height={200} />
+        <Badge className="absolute -top-3 -right-3">Beta</Badge>
       </Link>
       <nav>
         {!user.isSignedIn ? (

@@ -83,7 +83,7 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="w-6 h-6" />{" "}
-                        <span className="hidden lg:inline">{item.label}</span>
+                        <span className="hidden lg:inline">{}</span>
                       </div>
                     </a>
                   </Link>
@@ -96,7 +96,7 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
       <div className="mb-2">
         <Link
           href={`
-          /${agencySlug}/${clientSlug}/settings
+          /${agencySlug}/${clientSlug}/messages
           `}
           legacyBehavior
         >
@@ -117,5 +117,7 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
     </div>
   );
 };
+
+// please also make one
 
 export default ClientSidebar;

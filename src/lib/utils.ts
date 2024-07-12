@@ -30,3 +30,13 @@ export const showToast = (message: string) => {
     },
   });
 };
+
+export const showWIPToast = () => {
+  toast("🚧🚧 Work In Progress", {
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+    },
+  });
+};

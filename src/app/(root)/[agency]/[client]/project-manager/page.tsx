@@ -36,7 +36,8 @@ const ProjectManagerPage = () => {
               active="project-manager"
             />
             <div className="mt-24">
-              <ClientProjectManager />
+              {/* <ClientProjectManager /> */}
+              <center>Work In Progress</center>
             </div>
           </div>
         </div>

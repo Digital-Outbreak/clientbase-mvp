@@ -12,6 +12,7 @@ import Moment from "react-moment";
 import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { generateCustomSlug } from "@/lib/data";
+import { showWIPToast } from "@/lib/utils";
 
 type formClient = {
   name: string;
@@ -47,7 +48,7 @@ const ClientTable = ({ client }: { client: Client[] }) => {
               <Moment fromNow>{client.createdAt}</Moment>
             </TableCell>
             <TableCell className="flex flex-col md:flex-row gap-3">
-              <Button variant="outline">
+              <Button onClick={showWIPToast} variant="outline">
                 <SettingsIcon className="w-6 h-6" />
               </Button>
               <Link href={`/${client.companySlug}/${client.clientslug}`}>

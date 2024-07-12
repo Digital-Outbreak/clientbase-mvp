@@ -29,12 +29,17 @@ const MessagesPage = () => {
         </div>
         <div className="flex-1 ml-[6rem] lg:ml-[20%]">
           <div className="pb-8">
-            <ClientHeader
-              banner={client.bannerUrl}
-              companyName={client.companyName}
-              active="project-manager"
-            />
-            <div className="mt-24">Project Manager</div>
+            <div
+              className="flex 
+            flex-col
+            items-center
+            justify-center
+            h-[30rem]
+            "
+            >
+              {/* <ClientProjectManager /> */}
+              <center>🚧🚧 Work In Progress</center>
+            </div>
           </div>
         </div>
       </div>
