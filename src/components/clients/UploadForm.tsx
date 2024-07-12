@@ -75,7 +75,7 @@ const UploadForm = ({
       >
         <input {...getInputProps()} />
         <p className="text-white/60 text-center text-sm font-semibold transition duration-300 ease-in-out hover:text-primary/">
-          Drag 'n' drop some files here, or click to select files
+          Drag &apos;n&apos; drop some files here, or click to select files
         </p>
       </div>
       <aside className="flex flex-row flex-wrap mt-4">{thumbs}</aside>
