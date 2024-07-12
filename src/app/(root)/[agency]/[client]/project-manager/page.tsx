@@ -1,5 +1,6 @@
 "use client";
 import ClientHeader from "@/components/clients/ClientHeader";
+import KanbanBoard from "@/components/clients/ClientProjectManager";
 import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
@@ -34,8 +35,7 @@ const ProjectManagerPage = () => {
               active="project-manager"
             />
             <div className="mt-24">
-              {/* <ClientProjectManager /> */}
-              <center>Work In Progress</center>
+              <KanbanBoard />
             </div>
           </div>
         </div>

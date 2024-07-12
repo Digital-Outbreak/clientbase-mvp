@@ -1,4 +1,3 @@
-// App.tsx
 import React, { useState } from "react";
 import {
   DndContext,
@@ -13,21 +12,27 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 interface Card {
+  id: string;
   title: string;
 }
 
+const predefinedValues = ["Task 1", "Task 2", "Task 3"];
+
 const KanbanCard = ({
+  id,
   title,
   index,
   parent,
 }: {
+  id: string;
   title: string;
   index: number;
   parent: string;
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: title,
+    id,
     data: {
+      id,
       title,
       index,
       parent,
@@ -38,8 +43,8 @@ const KanbanCard = ({
   };
   return (
     <div
-      className="p-3 bg-white m-2 rounded-md border border-gray-500 shadow"
-      style={{ transform: style.transform }}
+      className="p-3 bg-background m-2 rounded-md border cursor-move border-purple-700 shadow"
+      style={style}
       {...listeners}
       {...attributes}
       ref={setNodeRef}
@@ -58,12 +63,13 @@ const KanbanLane = ({ title, items }: { title: string; items: Card[] }) => {
       <div className="font-bold">{title}</div>
       <div
         ref={setNodeRef}
-        className="bg-gray-200 rounded-md flex-1 p-2 flex flex-col"
+        className="bg-purple-950/25 rounded-md flex-1 mt-2 p-2 flex flex-col"
       >
-        {items.map(({ title: cardTitle }, index) => (
+        {items.map((card, index) => (
           <KanbanCard
-            title={cardTitle}
-            key={index}
+            id={card.id}
+            title={card.title}
+            key={card.id}
             index={index}
             parent={title}
           />
@@ -75,6 +81,14 @@ const KanbanLane = ({ title, items }: { title: string; items: Card[] }) => {
 
 const AddCard = ({ addCard }: { addCard: (title: string) => void }) => {
   const [title, setTitle] = useState("");
+  const [selectedValue, setSelectedValue] = useState(predefinedValues[0]);
+
+  const handleAddCard = () => {
+    const finalTitle = title || selectedValue;
+    addCard(finalTitle);
+    setTitle("");
+  };
+
   return (
     <div className="flex p-5">
       <input
@@ -83,12 +97,20 @@ const AddCard = ({ addCard }: { addCard: (title: string) => void }) => {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new card"
       />
+      <select
+        className="ml-2 p-2 border border-gray-500 rounded-md"
+        value={selectedValue}
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        {predefinedValues.map((value) => (
+          <option key={value} value={value}>
+            {value}
+          </option>
+        ))}
+      </select>
       <button
         className="ml-2 p-2 bg-blue-500 text-white rounded-md"
-        onClick={() => {
-          addCard(title);
-          setTitle("");
-        }}
+        onClick={handleAddCard}
       >
         Add Card
       </button>
@@ -100,61 +122,73 @@ const KanbanBoard = () => {
   const [todoItems, setTodoItems] = useState<Card[]>([]);
   const [doneItems, setDoneItems] = useState<Card[]>([]);
   const [inProgressItems, setInProgressItems] = useState<Card[]>([]);
-  const [unassignedItems, setUnassignedItems] = useState<Card[]>([]);
+  const [backlogItems, setBacklogItems] = useState<Card[]>([]);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
   const addNewCard = (title: string) => {
-    setUnassignedItems([...unassignedItems, { title }]);
+    const newCard = {
+      id: Math.random().toString(36).substr(2, 9),
+      title,
+    };
+    setBacklogItems((prevItems) => [...prevItems, newCard]);
+  };
+
+  const handleDragEnd = (e: any) => {
+    const { over, active } = e;
+    if (!over) return;
+
+    const fromContainer = active.data.current.parent;
+    const toContainer = over.id;
+    const draggedItemId = active.data.current.id;
+
+    const removeCard = (items: Card[], id: string) =>
+      items.filter((item) => item.id !== id);
+
+    const findCard = (items: Card[], id: string) =>
+      items.find((item) => item.id === id);
+
+    let movedCard;
+
+    if (fromContainer === "ToDo") {
+      movedCard = findCard(todoItems, draggedItemId);
+      setTodoItems((prevItems) => removeCard(prevItems, draggedItemId));
+    } else if (fromContainer === "In Progress") {
+      movedCard = findCard(inProgressItems, draggedItemId);
+      setInProgressItems((prevItems) => removeCard(prevItems, draggedItemId));
+    } else if (fromContainer === "Done") {
+      movedCard = findCard(doneItems, draggedItemId);
+      setDoneItems((prevItems) => removeCard(prevItems, draggedItemId));
+    } else if (fromContainer === "Backlog") {
+      movedCard = findCard(backlogItems, draggedItemId);
+      setBacklogItems((prevItems) => removeCard(prevItems, draggedItemId));
+    }
+
+    if (!movedCard) return;
+
+    if (toContainer === "ToDo") {
+      setTodoItems((prevItems) => [...prevItems, movedCard!]);
+    } else if (toContainer === "In Progress") {
+      setInProgressItems((prevItems) => [...prevItems, movedCard!]);
+    } else if (toContainer === "Done") {
+      setDoneItems((prevItems) => [...prevItems, movedCard!]);
+    } else if (toContainer === "Backlog") {
+      setBacklogItems((prevItems) => [...prevItems, movedCard!]);
+    }
   };
 
   return (
     <DndContext
       collisionDetection={rectIntersection}
-      onDragEnd={(e) => {
-        const container = e.over?.id;
-        const title = e.active.data.current?.title ?? "";
-        const index = e.active.data.current?.index ?? 0;
-        const parent = e.active.data.current?.parent ?? "ToDo";
-        if (container === "ToDo") {
-          setTodoItems([...todoItems, { title }]);
-        } else if (container === "Done") {
-          setDoneItems([...doneItems, { title }]);
-        } else if (container === "Unassigned") {
-          setUnassignedItems([...unassignedItems, { title }]);
-        } else {
-          setInProgressItems([...inProgressItems, { title }]);
-        }
-        if (parent === "ToDo") {
-          setTodoItems([
-            ...todoItems.slice(0, index),
-            ...todoItems.slice(index + 1),
-          ]);
-        } else if (parent === "Done") {
-          setDoneItems([
-            ...doneItems.slice(0, index),
-            ...doneItems.slice(index + 1),
-          ]);
-        } else if (parent === "Unassigned") {
-          setUnassignedItems([
-            ...unassignedItems.slice(0, index),
-            ...unassignedItems.slice(index + 1),
-          ]);
-        } else {
-          setInProgressItems([
-            ...inProgressItems.slice(0, index),
-            ...inProgressItems.slice(index + 1),
-          ]);
-        }
-      }}
+      onDragEnd={handleDragEnd}
       sensors={sensors}
     >
       <div className="flex flex-col">
         <AddCard addCard={addNewCard} />
-        <div className="flex flex-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <KanbanLane title="Backlog" items={backlogItems} />
           <KanbanLane title="ToDo" items={todoItems} />
           <KanbanLane title="In Progress" items={inProgressItems} />
           <KanbanLane title="Done" items={doneItems} />
-          <KanbanLane title="Unassigned" items={unassignedItems} />
         </div>
       </div>
     </DndContext>

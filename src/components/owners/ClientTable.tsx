@@ -47,12 +47,15 @@ const ClientTable = ({ client }: { client: Client[] }) => {
             <TableCell>
               <Moment fromNow>{client.createdAt}</Moment>
             </TableCell>
-            <TableCell className="flex flex-col md:flex-row gap-3">
+            <TableCell
+              className="flex flex-col md:flex-row
+             gap-3"
+            >
               <Button onClick={showWIPToast} variant="outline">
                 <SettingsIcon className="w-6 h-6" />
               </Button>
               <Link href={`/${client.companySlug}/${client.clientslug}`}>
-                <Button variant="outline" className="border-purple-600">
+                <Button variant="outline" className="border-purple-600 w-full">
                   Visit Portal
                 </Button>
               </Link>
