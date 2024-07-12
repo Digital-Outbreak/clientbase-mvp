@@ -1,7 +1,7 @@
 "use client";
 import ClientHeader from "@/components/clients/ClientHeader";
-import KanbanBoard from "@/components/clients/ClientProjectManager";
 import ClientSidebar from "@/components/clients/ClientSidebar";
+import KanbanBoard from "@/components/clients/Kanban/KanbanBoard";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
