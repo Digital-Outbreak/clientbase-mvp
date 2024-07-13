@@ -20,8 +20,6 @@ export function DatePickerUI({
   dateN: Date | undefined;
   setDateN: (date: Date | undefined) => void;
 }) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -29,18 +27,18 @@ export function DatePickerUI({
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !dateN && "text-muted-foreground"
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
+          {dateN ? format(dateN, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
           mode="single"
-          selected={date}
-          onSelect={setDate}
+          selected={dateN}
+          onSelect={setDateN}
           initialFocus
         />
       </PopoverContent>

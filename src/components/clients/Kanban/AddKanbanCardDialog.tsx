@@ -20,39 +20,45 @@ import {
 } from "@/components/ui/select";
 import { lanes } from "./AddCard";
 import { DatePickerUI } from "@/components/ui/DatePickerUI";
+
 const AddKanbanCardDialog = ({ children }: { children: React.ReactNode }) => {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+
+  console.log("date", date);
+
   return (
     <Dialog>
       <DialogTrigger>{children}</DialogTrigger>
-      <DialogContent className="lg:max-w-screen-lg overflow-y-scroll max-h-screen">
+      <DialogContent className="lg:max-w-[50%] overflow-y-scroll max-h-screen">
         <DialogHeader>
           <DialogTitle className="text-2xl">Add Card</DialogTitle>
           <DialogDescription className="capitalize">
             Please fill out the form below to add a new card
           </DialogDescription>
         </DialogHeader>
-        <Input placeholder="Enter card title" />
-        <Select>
-          <SelectTrigger>
-            <SelectValue placeholder="Default Lane" />
-          </SelectTrigger>
-          <SelectContent>
-            {lanes.map((lane) => (
-              <SelectItem value={lane} key={lane}>
-                {lane}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <DatePickerUI date={date} setDate={setDate} />
-        <DialogFooter>
-          <DialogClose>
-            <Button variant="destructive">Cancel</Button>
+        <div className="flex flex-col space-y-4">
+          <Input placeholder="Enter card title" />
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Default Lane" />
+            </SelectTrigger>
+            <SelectContent>
+              {lanes.map((lane) => (
+                <SelectItem value={lane} key={lane}>
+                  {lane}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <DatePickerUI dateN={date} setDateN={setDate} />
+        </div>
+        <DialogFooter className="flex gap-5">
+          <DialogClose className="w-full">
+            <Button variant="outline" className="w-full">
+              Cancel
+            </Button>
           </DialogClose>
-          <Button className="ml-2" type="button">
-            Add Card
-          </Button>
+          <Button className="w-full">Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
