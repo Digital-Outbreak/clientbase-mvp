@@ -83,7 +83,7 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
                     >
                       <div className="flex items-center gap-2">
                         <item.icon className="w-6 h-6" />{" "}
-                        <span className="hidden lg:inline">{}</span>
+                        <span className="hidden lg:inline">{item.label}</span>
                       </div>
                     </a>
                   </Link>

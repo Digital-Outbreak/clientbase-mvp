@@ -8,22 +8,37 @@ export const lanes = ["Backlog", "ToDo", "In Progress", "Done"];
 const AddCard = ({
   addCard,
 }: {
-  addCard: (title: string, lane: string) => void;
+  addCard: (title: string, lane: string, date?: Date) => void;
 }) => {
   const [title, setTitle] = useState("");
   const [selectedValue, setSelectedValue] = useState(predefinedValues[0]);
   const [selectedLane, setSelectedLane] = useState(lanes[0]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleAddCard = () => {
     const finalTitle = title || selectedValue;
-    addCard(finalTitle, selectedLane);
+    addCard(finalTitle, selectedLane, selectedDate);
     setTitle("");
+    setDialogOpen(false); // Close the dialog
   };
 
   return (
     <div className="justify-end flex p-5">
-      <AddKanbanCardDialog>
-        <Button>Add Card</Button>
+      <AddKanbanCardDialog
+        title={title}
+        setTitle={setTitle}
+        selectedLane={selectedLane}
+        setSelectedLane={setSelectedLane}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        ontap={handleAddCard}
+        dialogOpen={dialogOpen}
+        setDialogOpen={setDialogOpen}
+      >
+        <Button onClick={() => setDialogOpen(true)}>Add Card</Button>
       </AddKanbanCardDialog>
     </div>
   );

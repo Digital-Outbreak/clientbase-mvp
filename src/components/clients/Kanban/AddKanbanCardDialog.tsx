@@ -21,14 +21,32 @@ import {
 import { lanes } from "./AddCard";
 import { DatePickerUI } from "@/components/ui/DatePickerUI";
 
-const AddKanbanCardDialog = ({ children }: { children: React.ReactNode }) => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
-
-  console.log("date", date);
-
+const AddKanbanCardDialog = ({
+  children,
+  title,
+  setTitle,
+  selectedLane,
+  setSelectedLane,
+  selectedDate,
+  setSelectedDate,
+  ontap,
+  dialogOpen,
+  setDialogOpen,
+}: {
+  children: React.ReactNode;
+  title: string;
+  setTitle: (title: string) => void;
+  selectedLane: string;
+  setSelectedLane: (lane: string) => void;
+  selectedDate: Date | undefined;
+  setSelectedDate: (date: Date | undefined) => void;
+  ontap: () => void;
+  dialogOpen: boolean;
+  setDialogOpen: (open: boolean) => void;
+}) => {
   return (
-    <Dialog>
-      <DialogTrigger>{children}</DialogTrigger>
+    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="lg:max-w-[50%] overflow-y-scroll max-h-screen">
         <DialogHeader>
           <DialogTitle className="text-2xl">Add Card</DialogTitle>
@@ -37,8 +55,15 @@ const AddKanbanCardDialog = ({ children }: { children: React.ReactNode }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col space-y-4">
-          <Input placeholder="Enter card title" />
-          <Select>
+          <Input
+            placeholder="Enter card title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Select
+            value={selectedLane}
+            onValueChange={(value) => setSelectedLane(value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Default Lane" />
             </SelectTrigger>
@@ -50,15 +75,17 @@ const AddKanbanCardDialog = ({ children }: { children: React.ReactNode }) => {
               ))}
             </SelectContent>
           </Select>
-          <DatePickerUI dateN={date} setDateN={setDate} />
+          <DatePickerUI dateN={selectedDate} setDateN={setSelectedDate} />
         </div>
         <DialogFooter className="flex gap-5">
-          <DialogClose className="w-full">
+          <DialogClose asChild>
             <Button variant="outline" className="w-full">
               Cancel
             </Button>
           </DialogClose>
-          <Button className="w-full">Save</Button>
+          <Button className="w-full" onClick={ontap}>
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
