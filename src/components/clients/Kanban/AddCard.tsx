@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import React, { useState } from "react";
+import AddKanbanCardDialog from "./AddKanbanCardDialog";
 
 export const predefinedValues = ["Task 1", "Task 2", "Task 3"];
 export const lanes = ["Backlog", "ToDo", "In Progress", "Done"];
@@ -21,7 +22,9 @@ const AddCard = ({
 
   return (
     <div className="justify-end flex p-5">
-      <Button>Add Card</Button>
+      <AddKanbanCardDialog>
+        <Button>Add Card</Button>
+      </AddKanbanCardDialog>
     </div>
   );
 };
