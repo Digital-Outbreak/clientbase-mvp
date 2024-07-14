@@ -117,6 +117,11 @@ export const kanbadAddCardToLane = async (
   dueDate: Date
 ) => {
   try {
+    lane = lane.replace(/\s/g, "") as
+      | "Backlog"
+      | "Todo"
+      | "InProgress"
+      | "Done";
     const newCard = await prisma.kanbanCard.create({
       data: {
         dueDate,
@@ -129,6 +134,44 @@ export const kanbadAddCardToLane = async (
     return newCard;
   } catch (error: any) {
     console.error(`Error creating card: ${error.message}`);
+    return null;
+  }
+};
+export const getKanbanCardsByLane = async (
+  clientId: string,
+  lane: "Backlog" | "Todo" | "InProgress" | "Done"
+) => {
+  try {
+    const cards = await prisma.kanbanCard.findMany({
+      where: {
+        clientId: clientId, // Check if this is correct; it should match your Prisma schema
+        lane: lane, // Check if this is correct; it should match your Prisma schema
+      },
+    });
+    return cards;
+  } catch (error: any) {
+    console.error(`Error getting cards: ${error.message}`);
+    return null;
+  }
+};
+
+export const updateKanbanCardLane = async (
+  cardId: string,
+  lane: "Backlog" | "Todo" | "InProgress" | "Done"
+) => {
+  try {
+    lane = lane.replace(/\s/g, "") as
+      | "Backlog"
+      | "Todo"
+      | "InProgress"
+      | "Done";
+    const updatedCard = await prisma.kanbanCard.update({
+      where: { id: cardId },
+      data: { lane },
+    });
+    return updatedCard;
+  } catch (error: any) {
+    console.error(`Error updating card: ${error.message}`);
     return null;
   }
 };

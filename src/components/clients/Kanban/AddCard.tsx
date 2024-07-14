@@ -11,7 +11,11 @@ const AddCard = ({
   addCard,
   client,
 }: {
-  addCard: (title: string, lane: string, date?: Date) => void;
+  addCard: (
+    title: string,
+    lane: "Backlog" | "Todo" | "InProgress" | "Done",
+    date?: Date
+  ) => void;
   client: Client;
 }) => {
   const [loading, setLoading] = useState(false);
@@ -26,7 +30,7 @@ const AddCard = ({
   const handleAddCard = () => {
     setLoading(true);
     const finalTitle = title || selectedValue;
-    addCard(finalTitle, selectedLane, selectedDate);
+    // addCard(finalTitle, selectedLane, selectedDate);
     setTitle("");
     if (selectedDate) {
       kanbadAddCardToLane(

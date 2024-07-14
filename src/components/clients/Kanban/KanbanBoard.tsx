@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DndContext,
   rectIntersection,
@@ -9,107 +9,162 @@ import {
 } from "@dnd-kit/core";
 import AddCard from "./AddCard";
 import KanbanLane from "./KanbanLane";
-
-export interface Card {
-  id: string;
-  title: string;
-  date?: Date;
-}
+import {
+  getKanbanCardsByLane,
+  updateKanbanCardLane,
+} from "@/lib/db/client-queries";
+import { showToast } from "@/lib/utils";
 
 const KanbanBoard = ({ client }: { client: Client }) => {
-  const [todoItems, setTodoItems] = useState<Card[]>([]);
-  const [doneItems, setDoneItems] = useState<Card[]>([]);
-  const [inProgressItems, setInProgressItems] = useState<Card[]>([]);
-  const [backlogItems, setBacklogItems] = useState<Card[]>([]);
+  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [todoItems, setTodoItems] = useState<KanbanCard[]>([]);
+  const [doneItems, setDoneItems] = useState<KanbanCard[]>([]);
+  const [inProgressItems, setInProgressItems] = useState<KanbanCard[]>([]);
+  const [backlogItems, setBacklogItems] = useState<KanbanCard[]>([]);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
-  const addNewCard = (title: string, lane: string, date?: Date) => {
-    const newCard = {
+  const addNewCard = (
+    title: string,
+    lane: "Backlog" | "Todo" | "InProgress" | "Done",
+    date?: Date
+  ) => {
+    const newCard: KanbanCard = {
       id: Math.random().toString(36).substr(2, 9),
       title,
-      date,
+      dueDate: date!, // Assuming dueDate is the property name in KanbanCard
+      lane, // Assuming lane is the property name in KanbanCard
+      clientId: client.id, // Assuming clientId is the property name in KanbanCard
     };
-    if (lane === "Backlog") {
-      setBacklogItems((prevItems) => [...prevItems, newCard]);
-    } else if (lane === "ToDo") {
-      setTodoItems((prevItems) => [...prevItems, newCard]);
-    } else if (lane === "In Progress") {
-      setInProgressItems((prevItems) => [...prevItems, newCard]);
-    } else if (lane === "Done") {
-      setDoneItems((prevItems) => [...prevItems, newCard]);
+
+    switch (lane) {
+      case "Backlog":
+        setBacklogItems((prevItems) => [...prevItems, newCard]);
+        break;
+      case "Todo":
+        setTodoItems((prevItems) => [...prevItems, newCard]);
+        break;
+      case "InProgress":
+        setInProgressItems((prevItems) => [...prevItems, newCard]);
+        break;
+      case "Done":
+        setDoneItems((prevItems) => [...prevItems, newCard]);
+        break;
+      default:
+        break;
     }
   };
 
-  const handleDragEnd = (e: any) => {
-    const { over, active } = e;
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        setLoading(true); // Set loading to true when fetching starts
+
+        const [backlogCards, todoCards, inProgressCards, doneCards] =
+          await Promise.all([
+            getKanbanCardsByLane(client.id, "Backlog"),
+            getKanbanCardsByLane(client.id, "Todo"),
+            getKanbanCardsByLane(client.id, "InProgress"),
+            getKanbanCardsByLane(client.id, "Done"),
+          ]);
+
+        setBacklogItems(backlogCards || []);
+        setTodoItems(todoCards || []);
+        setInProgressItems(inProgressCards || []);
+        setDoneItems(doneCards || []);
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+        showToast("Error fetching cards");
+      } finally {
+        setLoading(false); // Set loading to false when fetching is complete
+      }
+    };
+
+    fetchCards();
+  }, [client.id]);
+
+  const handleDragEnd = (event: any) => {
+    const { over, active } = event;
     if (!over) return;
 
     const fromContainer = active.data.current.parent;
     const toContainer = over.id;
     const draggedItemId = active.data.current.id;
 
-    const removeCard = (items: Card[], id: string) =>
+    const removeCard = (items: KanbanCard[], id: string) =>
       items.filter((item) => item.id !== id);
 
-    const findCard = (items: Card[], id: string) =>
+    const findCard = (items: KanbanCard[], id: string) =>
       items.find((item) => item.id === id);
 
     let movedCard;
 
-    if (fromContainer === "ToDo") {
-      movedCard = findCard(todoItems, draggedItemId);
-      setTodoItems((prevItems) => removeCard(prevItems, draggedItemId));
-    } else if (fromContainer === "In Progress") {
-      movedCard = findCard(inProgressItems, draggedItemId);
-      setInProgressItems((prevItems) => removeCard(prevItems, draggedItemId));
-    } else if (fromContainer === "Done") {
-      movedCard = findCard(doneItems, draggedItemId);
-      setDoneItems((prevItems) => removeCard(prevItems, draggedItemId));
-    } else if (fromContainer === "Backlog") {
-      movedCard = findCard(backlogItems, draggedItemId);
-      setBacklogItems((prevItems) => removeCard(prevItems, draggedItemId));
+    switch (fromContainer) {
+      case "ToDo":
+        movedCard = findCard(todoItems, draggedItemId);
+        setTodoItems((prevItems) => removeCard(prevItems, draggedItemId));
+        break;
+      case "In Progress":
+        movedCard = findCard(inProgressItems, draggedItemId);
+        setInProgressItems((prevItems) => removeCard(prevItems, draggedItemId));
+        break;
+      case "Done":
+        movedCard = findCard(doneItems, draggedItemId);
+        setDoneItems((prevItems) => removeCard(prevItems, draggedItemId));
+        break;
+      case "Backlog":
+        movedCard = findCard(backlogItems, draggedItemId);
+        setBacklogItems((prevItems) => removeCard(prevItems, draggedItemId));
+        break;
+      default:
+        break;
     }
 
     if (!movedCard) return;
 
-    if (toContainer === fromContainer) {
-      const containerItems =
-        toContainer === "ToDo"
-          ? todoItems
-          : toContainer === "In Progress"
-          ? inProgressItems
-          : toContainer === "Done"
-          ? doneItems
-          : backlogItems;
+    // Explicitly define type of toContainer as keyof typeof containerItems
+    const containerItems: { [key: string]: KanbanCard[] } = {
+      ToDo: todoItems,
+      "In Progress": inProgressItems,
+      Done: doneItems,
+      Backlog: backlogItems,
+    };
 
-      const oldIndex = active.data.current.index;
-      const newIndex = containerItems.findIndex((item) => item.id === over.id);
+    const targetContainer = containerItems[toContainer]; // Access using bracket notation
 
-      const newItems = [...containerItems];
-      newItems.splice(oldIndex, 1);
-      newItems.splice(newIndex, 0, movedCard);
+    if (!targetContainer) return;
 
-      if (toContainer === "ToDo") {
+    const oldIndex = active.data.current.index;
+    const newIndex = targetContainer.findIndex((item) => item.id === over.id);
+
+    const newItems = [...targetContainer];
+    newItems.splice(oldIndex, 1);
+    newItems.splice(newIndex, 0, movedCard);
+
+    switch (toContainer) {
+      case "ToDo":
         setTodoItems(newItems);
-      } else if (toContainer === "In Progress") {
+        break;
+      case "In Progress":
         setInProgressItems(newItems);
-      } else if (toContainer === "Done") {
+        break;
+      case "Done":
         setDoneItems(newItems);
-      } else if (toContainer === "Backlog") {
+        break;
+      case "Backlog":
         setBacklogItems(newItems);
-      }
-    } else {
-      if (toContainer === "ToDo") {
-        setTodoItems((prevItems) => [...prevItems, movedCard!]);
-      } else if (toContainer === "In Progress") {
-        setInProgressItems((prevItems) => [...prevItems, movedCard!]);
-      } else if (toContainer === "Done") {
-        setDoneItems((prevItems) => [...prevItems, movedCard!]);
-      } else if (toContainer === "Backlog") {
-        setBacklogItems((prevItems) => [...prevItems, movedCard!]);
-      }
+        break;
+      default:
+        break;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <DndContext
@@ -118,7 +173,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
       sensors={sensors}
     >
       <div className="flex flex-col">
-        <AddCard addCard={addNewCard} client={client} />
+        <AddCard client={client} addCard={addNewCard} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <KanbanLane title="Backlog" items={backlogItems} />
           <KanbanLane title="ToDo" items={todoItems} />
