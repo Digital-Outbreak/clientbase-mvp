@@ -35,22 +35,22 @@ model Owner {
 }
 
 model Client {
-  id            String     @id @default(cuid())
+  id            String       @id @default(cuid())
   ownerId       String
   name          String
   email         String
   loom          String
-  // checkList    String[]
   password      String
   clientCompany String
-  clientSlug    String?    @unique
+  clientSlug    String?      @unique
   companyName   String
   pfpUrl        String
   bannerUrl     String
   files         FormData[]
   links         String[]
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  KanbanCard    KanbanCard[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 model FormData {
@@ -58,6 +58,26 @@ model FormData {
   name      String
   url       String
   createdAt DateTime @default(now())
+
+  Client   Client? @relation(fields: [clientId], references: [id])
+  clientId String?
+}
+
+enum lanes {
+  Backlog
+  Todo
+  InProgress
+  Done
+}
+
+model KanbanCard {
+  id        String   @id @default(cuid())
+  ownerId   String
+  title     String
+  dueDate   DateTime
+  lane      lanes    @default(Backlog)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   Client   Client? @relation(fields: [clientId], references: [id])
   clientId String?

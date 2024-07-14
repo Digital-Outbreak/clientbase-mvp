@@ -16,7 +16,7 @@ export interface Card {
   date?: Date;
 }
 
-const KanbanBoard = () => {
+const KanbanBoard = ({ client }: { client: Client }) => {
   const [todoItems, setTodoItems] = useState<Card[]>([]);
   const [doneItems, setDoneItems] = useState<Card[]>([]);
   const [inProgressItems, setInProgressItems] = useState<Card[]>([]);
@@ -118,7 +118,7 @@ const KanbanBoard = () => {
       sensors={sensors}
     >
       <div className="flex flex-col">
-        <AddCard addCard={addNewCard} />
+        <AddCard addCard={addNewCard} client={client} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <KanbanLane title="Backlog" items={backlogItems} />
           <KanbanLane title="ToDo" items={todoItems} />

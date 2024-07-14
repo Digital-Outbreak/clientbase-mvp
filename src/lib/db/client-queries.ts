@@ -109,3 +109,26 @@ export const getUploadedFiles = async (clientId: string) => {
     return null;
   }
 };
+
+export const kanbadAddCardToLane = async (
+  client: Client,
+  lane: "Backlog" | "Todo" | "InProgress" | "Done",
+  title: string,
+  dueDate: Date
+) => {
+  try {
+    const newCard = await prisma.kanbanCard.create({
+      data: {
+        dueDate,
+        title,
+        lane,
+        ownerId: client.ownerId,
+        clientId: client.id,
+      },
+    });
+    return newCard;
+  } catch (error: any) {
+    console.error(`Error creating card: ${error.message}`);
+    return null;
+  }
+};

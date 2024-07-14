@@ -40,6 +40,7 @@ export function DatePickerUI({
           selected={dateN}
           onSelect={setDateN}
           initialFocus
+          fromDate={new Date()}
         />
       </PopoverContent>
     </Popover>

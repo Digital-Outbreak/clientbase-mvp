@@ -38,3 +38,11 @@ interface FileData {
   createdAt: string;
   clientId: string;
 }
+
+interface KanbanCard {
+  id: string;
+  title: string;
+  dueDate: Date;
+  lane: "Backlog" | "Todo" | "InProgress" | "Done";
+  clientId: string | null;
+}

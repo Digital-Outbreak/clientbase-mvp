@@ -35,7 +35,7 @@ const ProjectManagerPage = () => {
               active="project-manager"
             />
             <div className="mt-24">
-              <KanbanBoard />
+              <KanbanBoard client={client} />
             </div>
           </div>
         </div>
