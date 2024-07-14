@@ -9,9 +9,11 @@ import {
 } from "@dnd-kit/core";
 import AddCard from "./AddCard";
 import KanbanLane from "./KanbanLane";
+
 export interface Card {
   id: string;
   title: string;
+  date?: Date;
 }
 
 const KanbanBoard = () => {
@@ -21,10 +23,11 @@ const KanbanBoard = () => {
   const [backlogItems, setBacklogItems] = useState<Card[]>([]);
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
-  const addNewCard = (title: string, lane: string) => {
+  const addNewCard = (title: string, lane: string, date?: Date) => {
     const newCard = {
       id: Math.random().toString(36).substr(2, 9),
       title,
+      date,
     };
     if (lane === "Backlog") {
       setBacklogItems((prevItems) => [...prevItems, newCard]);

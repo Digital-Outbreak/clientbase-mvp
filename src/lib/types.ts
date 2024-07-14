@@ -38,11 +38,3 @@ interface FileData {
   createdAt: string;
   clientId: string;
 }
-
-export interface Card {
-  id: string;
-  title: string;
-  date?: Date;
-}
-export const predefinedValues = ["Task 1", "Task 2", "Task 3"];
-export const lanes = ["Backlog", "ToDo", "In Progress", "Done"];
