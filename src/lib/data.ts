@@ -1,5 +1,5 @@
 export const defaultLoomLink =
-  "https://www.loom.com/share/6cb225198962416bbc9a685b57bc5270?sid=16d6be0a-bd70-4328-bd8c-caa8c70b15eb";
+  "https://www.loom.com/share/db09d673257c4f288d1ea607b459f5bf?sid=4896839c-5a04-4724-9d89-4e1c6d83c9e0";
 
 export const defaultBannerUrl = "/bannerDefault.png";
 

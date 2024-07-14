@@ -14,7 +14,7 @@ const AddCard = ({
   addCard: (
     title: string,
     lane: "Backlog" | "Todo" | "InProgress" | "Done",
-    date?: Date
+    date?: Date | undefined
   ) => void;
   client: Client;
 }) => {

@@ -31,9 +31,9 @@ const KanbanBoard = ({ client }: { client: Client }) => {
     const newCard: KanbanCard = {
       id: Math.random().toString(36).substr(2, 9),
       title,
-      dueDate: date!, // Assuming dueDate is the property name in KanbanCard
-      lane, // Assuming lane is the property name in KanbanCard
-      clientId: client.id, // Assuming clientId is the property name in KanbanCard
+      dueDate: date || new Date(),
+      lane,
+      clientId: client.id,
     };
 
     switch (lane) {
@@ -67,6 +67,8 @@ const KanbanBoard = ({ client }: { client: Client }) => {
             getKanbanCardsByLane(client.id, "Done"),
           ]);
 
+        console.log(backlogCards, todoCards, inProgressCards, doneCards);
+
         setBacklogItems(backlogCards || []);
         setTodoItems(todoCards || []);
         setInProgressItems(inProgressCards || []);
@@ -82,7 +84,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
     fetchCards();
   }, [client.id]);
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = async (event: any) => {
     const { over, active } = event;
     if (!over) return;
 
@@ -103,7 +105,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
         movedCard = findCard(todoItems, draggedItemId);
         setTodoItems((prevItems) => removeCard(prevItems, draggedItemId));
         break;
-      case "In Progress":
+      case "InProgress":
         movedCard = findCard(inProgressItems, draggedItemId);
         setInProgressItems((prevItems) => removeCard(prevItems, draggedItemId));
         break;
@@ -124,7 +126,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
     // Explicitly define type of toContainer as keyof typeof containerItems
     const containerItems: { [key: string]: KanbanCard[] } = {
       ToDo: todoItems,
-      "In Progress": inProgressItems,
+      InProgress: inProgressItems,
       Done: doneItems,
       Backlog: backlogItems,
     };
@@ -144,7 +146,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
       case "ToDo":
         setTodoItems(newItems);
         break;
-      case "In Progress":
+      case "InProgress":
         setInProgressItems(newItems);
         break;
       case "Done":
@@ -155,6 +157,16 @@ const KanbanBoard = ({ client }: { client: Client }) => {
         break;
       default:
         break;
+    }
+
+    try {
+      await updateKanbanCardLane(
+        client.id,
+        toContainer as "Backlog" | "Todo" | "InProgress" | "Done"
+      );
+    } catch (error) {
+      console.error("Error updating card lane:", error);
+      showToast("Error updating card lane");
     }
   };
 
@@ -177,7 +189,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <KanbanLane title="Backlog" items={backlogItems} />
           <KanbanLane title="ToDo" items={todoItems} />
-          <KanbanLane title="In Progress" items={inProgressItems} />
+          <KanbanLane title="InProgress" items={inProgressItems} />
           <KanbanLane title="Done" items={doneItems} />
         </div>
       </div>

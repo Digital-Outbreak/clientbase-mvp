@@ -2,13 +2,13 @@ import React from "react";
 import { useDroppable } from "@dnd-kit/core";
 import KanbanCard from "./KanbanCard";
 
-export interface Card {
-  id: string;
+const KanbanLane = ({
+  title,
+  items,
+}: {
   title: string;
-  date?: Date;
-}
-
-const KanbanLane = ({ title, items }: { title: string; items: Card[] }) => {
+  items: KanbanCard[];
+}) => {
   const { setNodeRef } = useDroppable({
     id: title,
   });
@@ -41,7 +41,7 @@ const KanbanLane = ({ title, items }: { title: string; items: Card[] }) => {
               key={card.id}
               index={index}
               parent={title}
-              date={card.date}
+              date={card.dueDate}
             />
           ))
         )}

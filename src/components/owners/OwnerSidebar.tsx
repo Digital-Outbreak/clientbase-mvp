@@ -1,87 +1,79 @@
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { HomeIcon, Settings } from "lucide-react";
-import Image from "next/image";
+import React from "react";
+import { Home, FileText, LightbulbOff, Briefcase, Heart } from "lucide-react";
 
-type OwnerSidebarProps = {
+const Sidebar = ({
+  owner,
+  active,
+}: {
   owner: Owner;
-  active: "home" | "settings";
-};
-
-export default function OwnerSidebar({ owner, active }: OwnerSidebarProps) {
-  const navItems = [
-    {
-      href: `/${owner.companySlug}`,
-      icon: HomeIcon,
-      label: "Home",
-      active: active === "home",
-    },
-    {
-      href: `/${owner.companySlug}/settings`,
-      icon: Settings,
-      label: "Settings",
-      active: active === "settings",
-    },
-  ];
+  active: "home" | "important-links" | "file-manager" | "project-manager";
+}) => {
   return (
-    <div className="flex p-4 items-center bg-background z-[999] border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
-      <div>
-        <div className="flex flex-row gap-3 items-center">
-          <Image
-            src={owner.companyIconUrl}
-            alt={owner.companyName}
-            width={50}
-            height={50}
-            className="rounded-full object-cover border-white border-2"
-            style={{ width: "40px", height: "40px" }}
-          />
-
-          <h1 className="hidden font-bold md:block text-[1.2rem]">
-            {owner.companyName}
-          </h1>
-        </div>
-
-        <nav className="mt-10 w-full">
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-none sm:flex sm:flex-col sm:gap-0">
-            {navItems.map((item, index) => (
-              <li key={index} className="mb-2">
-                <a
-                  href={item.href}
-                  className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
-                    item.active
-                      ? "bg-purple-950 text-white"
-                      : "hover:bg-purple-950 hover:text-white"
-                  }`}
-                >
-                  <div className="flex items-center gap-2">
-                    <item.icon className="w-6 h-6" />{" "}
-                    <span className="hidden lg:inline">{item.label}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+    <div className="w-64 h-screen bg-gray-900 text-white p-6 flex flex-col">
+      <div className="flex items-center mb-10">
+        <div className="w-10 h-10 bg-purple-600 rounded-lg mr-3"></div>
+        <h1 className="text-2xl font-bold">Contacts</h1>
       </div>
 
-      <div
-        className="p-4
-      bg-gradient-to-br from-purple-950 to-purple-900
-      rounded-lg flex-col hidden lg:flex"
-      >
-        <Badge className="w-fit" variant="secondary">
-          Note
-        </Badge>
-        <h1>This only a MVP</h1>
-        <p>
-          This is a MVP, some features may not work as expected. Please report
-          any issues to the owner.
-        </p>
-      </div>
+      <nav className="flex-grow">
+        <ul className="space-y-4">
+          <li>
+            <a
+              href="#"
+              className="flex items-center p-3 bg-gray-800 rounded-lg transition-all duration-200 hover:bg-gray-700"
+            >
+              <Home className="mr-3" size={22} />
+              <span className="font-medium">Overview</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800"
+            >
+              <FileText className="mr-3" size={22} />
+              <span className="font-medium">Tasks</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800"
+            >
+              <LightbulbOff className="mr-3" size={22} />
+              <span className="font-medium">Insights</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
-      <Badge className="block lg:hidden text-center rounded-sm">
-        MVP Version
-      </Badge>
+      <div className="mt-auto">
+        <h2 className="text-sm uppercase text-gray-500 mb-3 font-semibold tracking-wider">
+          TEAMS
+        </h2>
+        <ul className="space-y-3">
+          <li>
+            <a
+              href="#"
+              className="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800"
+            >
+              <Briefcase className="mr-3" size={22} />
+              <span className="font-medium">Sales</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              className="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800"
+            >
+              <Heart className="mr-3" size={22} />
+              <span className="font-medium">Support</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   );
-}
+};
+
+export default Sidebar;
