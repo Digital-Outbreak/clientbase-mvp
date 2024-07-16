@@ -3,13 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import {
   CircleCheckBig,
   Folder,
-  HomeIcon,
+  Home as HomeIcon,
   Link2,
   MessageCircleMore,
-  Settings,
+  UserPlus2,
 } from "lucide-react";
 import Image from "next/image";
 import { generateCustomSlug } from "@/lib/data";
+import { cn } from "@/lib/utils";
 
 type ClientSidebarProps = {
   client: Client;
@@ -27,97 +28,105 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
 
   const navItems = [
     {
+      id: "home",
       href: `/${agencySlug}/${clientSlug}`,
       icon: HomeIcon,
       label: "Home",
-      actived: "home",
     },
     {
+      id: "important-links",
       href: `/${agencySlug}/${clientSlug}/important-links`,
       icon: Link2,
       label: "Important Links",
-      actived: "important-links",
     },
     {
+      id: "file-manager",
       href: `/${agencySlug}/${clientSlug}/file-manager`,
       icon: Folder,
       label: "File Manager",
-      actived: "file-manager",
     },
     {
+      id: "project-manager",
       href: `/${agencySlug}/${clientSlug}/project-manager`,
       icon: CircleCheckBig,
       label: "Project Manager",
-      actived: "project-manager",
     },
   ];
 
+  const MenuItem = ({
+    id,
+    href,
+    icon: Icon,
+    label,
+  }: {
+    id: string;
+    href: string;
+    icon: React.ElementType;
+    label: string;
+  }) => (
+    <li>
+      <Link
+        href={href}
+        passHref
+        className={cn(
+          "flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800",
+          active === id && "bg-purple-600 hover:bg-purple-700"
+        )}
+      >
+        <Icon className="mr-0 md:mr-3" size={22} />
+        <span className="font-medium hidden md:inline">{label}</span>
+      </Link>
+    </li>
+  );
+
   return (
-    <div className="flex p-4 items-center bg-background z-[999] border-r-2 border-gray-900 flex-col border-dotted h-screen justify-between">
-      <div>
-        <div className="flex flex-row justify-center gap-3 items-center">
+    <div className="w-20 md:w-64 h-screen bg-gray-900 text-white p-4 md:p-6 flex flex-col">
+      <div className="flex items-center mb-10 justify-center md:justify-start">
+        <div className="w-10 h-10 rounded-lg md:mr-3">
           <Image
             src={client.pfpUrl}
             alt={client.companyName}
-            width={50}
-            height={50}
-            className="rounded-full object-cover border-white border-2"
-            style={{ width: "40px", height: "40px" }}
+            width={40}
+            height={40}
+            className="rounded-full"
           />
-          <h1 className="hidden md:block text-3xl font-semibold">
-            {client.clientCompany}
-          </h1>
         </div>
-        <nav className="mt-10 w-full">
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-none sm:flex sm:flex-col sm:gap-0">
-            {navItems.map((item, index) => {
-              return (
-                <li key={index} className="mb-2">
-                  <Link href={item.href} legacyBehavior>
-                    <a
-                      className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
-                        active === item.actived
-                          ? "bg-purple-950 text-white"
-                          : "hover:bg-purple-950 hover:text-white"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <item.icon className="w-6 h-6" />{" "}
-                        <span className="hidden lg:inline">{item.label}</span>
-                      </div>
-                    </a>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
+        <h1 className="text-2xl font-bold hidden md:inline">
+          {client.companyName}
+        </h1>
       </div>
-      <div className="mb-2">
-        <Link
-          href={`
-          /${agencySlug}/${clientSlug}/messages
-          `}
-          legacyBehavior
-        >
-          <a
-            className={`block py-2 px-4 rounded-md transition-colors duration-300 ${
-              active === "message"
-                ? "bg-purple-950 text-white"
-                : "hover:bg-purple-950 hover:text-white"
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              <MessageCircleMore className="w-7 h-7" />{" "}
-              <span className="hidden lg:inline">Messages</span>
-            </div>
-          </a>
-        </Link>
+
+      <nav className="flex-grow">
+        <ul className="space-y-4">
+          {navItems.map((item) => (
+            <MenuItem key={item.id} {...item} />
+          ))}
+        </ul>
+      </nav>
+
+      <div className="mt-auto">
+        <h2 className="text-sm uppercase text-gray-500 mb-3 font-semibold tracking-wider hidden md:block">
+          {client.companyName} Social
+        </h2>
+        <ul className="space-y-3">
+          {/* for messages only */}
+          <MenuItem
+            id="message"
+            href={`/${agencySlug}/${clientSlug}/message`}
+            icon={MessageCircleMore}
+            label="Messages"
+          />
+          {/* invite */}
+          <MenuItem
+            id="invite"
+            href={`/${agencySlug}/${clientSlug}/invite`}
+            icon={UserPlus2}
+            label="Invite Team"
+          />
+        </ul>
       </div>
     </div>
   );
 };
-
-// please also make one
 
 export default ClientSidebar;

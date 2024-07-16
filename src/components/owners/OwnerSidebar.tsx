@@ -1,18 +1,10 @@
 import React from "react";
-import {
-  Home,
-  Settings,
-  Users,
-  FileText,
-  LightbulbOff,
-  Briefcase,
-  Heart,
-  CreditCard,
-} from "lucide-react";
+import { Home, Settings, Users, CreditCard, UserPlus2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
-const Sidebar = ({
+const OwnerSidebar = ({
   owner,
   active,
 }: {
@@ -29,7 +21,22 @@ const Sidebar = ({
       `,
     },
 
-    { id: "clients", icon: Users, label: "Clients", slug: "/clients" },
+    {
+      id: "clients",
+      icon: Users,
+      label: "Clients",
+      slug: `
+      /${owner.companySlug}/clients
+      `,
+    },
+    {
+      id: "Invite",
+      icon: UserPlus2,
+      label: "Invite Team",
+      slug: `
+      /${owner.companySlug}/invite
+      `,
+    },
   ];
 
   const teamItems = [
@@ -76,10 +83,12 @@ const Sidebar = ({
     <div className="w-20 md:w-64 h-screen bg-gray-900 text-white p-4 md:p-6 flex flex-col">
       <div className="flex items-center mb-10 justify-center md:justify-start">
         <div className="w-10 h-10 rounded-lg md:mr-3">
-          <img
+          <Image
             src={owner.companyIconUrl}
-            alt="Owner Image"
-            className="w-full h-full rounded-lg"
+            alt={owner.companyName}
+            width={40}
+            height={40}
+            className="rounded-full"
           />
         </div>
         <h1 className="text-2xl font-bold hidden md:inline">
@@ -109,4 +118,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default OwnerSidebar;
