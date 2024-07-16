@@ -1,18 +1,26 @@
 "use client";
-import ClientSidebar from "@/components/clients/ClientSidebar";
-import { getClientBySlug } from "@/lib/db/client-queries";
-import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { SearchIcon, Smile, PaperclipIcon } from "lucide-react";
+import { useParams } from "next/navigation";
+import {
+  SearchIcon,
+  Smile,
+  PaperclipIcon,
+  Menu,
+  ArrowLeft,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import ClientSidebar from "@/components/clients/ClientSidebar";
+import { getClientBySlug } from "@/lib/db/client-queries";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
-// types.ts
 export interface Chat {
   id: string;
   name: string;
   lastMessage: string;
   time: string;
+  role: string;
   avatar: string;
   unread?: number;
 }
@@ -24,32 +32,50 @@ export interface Message {
   sender: "agency" | "client";
 }
 
-export const chats: Chat[] = [
+const chats: Chat[] = [
   {
     id: "1",
-    name: "John Doe",
+    name: "Joey",
+    role: "Owner",
     lastMessage: "Can we schedule a meeting?",
     time: "Yesterday",
-    avatar: "/client-avatar.png",
+    avatar:
+      "https://cdn.discordapp.com/avatars/204772159699025920/e720fb269a53da2f015af5833f1b840b?size=1024",
   },
   {
     id: "2",
-    name: "Jane Smith",
+    name: "Shrit Shrivastava",
+    role: "Designer",
+
     lastMessage: "Here is the document you requested.",
     time: "Yesterday",
-    avatar: "/client-avatar.png",
+    avatar:
+      "https://cdn.discordapp.com/avatars/735700217118195772/eebf7f7eece02036fa0a4645d63e164f?size=1024",
   },
   {
     id: "3",
-    name: "Acme Corp",
+    name: "Bell",
+    role: "Content Manager",
+
     lastMessage: "Looking forward to the proposal.",
     time: "Yesterday",
-    avatar: "/company-avatar.png",
+    avatar:
+      "https://cdn.discordapp.com/avatars/888318454761918496/53f40c86bb41f781e56e2946c1dc077d?size=1024",
     unread: 3,
+  },
+  {
+    id: "3",
+    name: "Tommy",
+    role: "Owner",
+
+    lastMessage: "Looking forward to the proposal.",
+    time: "Yesterday",
+    avatar:
+      "https://cdn.discordapp.com/avatars/1024124087259373648/7f3069d4eabaabddabcb7c372a1ff9ba?size=1024",
   },
 ];
 
-export const messages: Message[] = [
+const messages: Message[] = [
   {
     id: "1",
     content: "Can we schedule a meeting?",
@@ -70,33 +96,66 @@ export const messages: Message[] = [
   },
 ];
 
-const MessagesPage = () => {
-  const [client, setClient] = useState<Client>();
+const MessagesPage: React.FC = () => {
+  const [client, setClient] = useState<Client | null>(null);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+  const [newMessage, setNewMessage] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
 
   const params = useParams();
 
   useEffect(() => {
     const fetchClient = async () => {
-      const client = await getClientBySlug(params.client.toString());
-      setClient(client as Client);
+      if (params.client) {
+        const fetchedClient = await getClientBySlug(params.client.toString());
+        setClient(fetchedClient as Client);
+      }
     };
 
-    if (params.agency) {
-      fetchClient();
+    fetchClient();
+
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [params.client]);
+
+  const handleSendMessage = () => {
+    if (newMessage.trim()) {
+      console.log("Sending message:", newMessage);
+      setNewMessage("");
     }
-  }, [params.agency]);
+  };
+
+  const handleChatSelect = (chat: Chat) => {
+    setSelectedChat(chat);
+  };
+
+  const handleBackToList = () => {
+    setSelectedChat(null);
+  };
 
   return (
     client && (
-      <div className="flex h-screen flex-col lg:flex-row">
-        <div className="w-full lg:w-[20%] h-auto lg:h-full">
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        <div className={`bg-purple-900 flex-shrink-0 block`}>
           <ClientSidebar client={client} active="message" />
         </div>
-        <div className="flex-1">
-          <div className="flex h-screen flex-col lg:flex-row">
-            {/* Left sidebar */}
-            <div className="w-full lg:w-1/3 bg-background border-r-2 border-dotted border-gray-900 flex flex-col">
+
+        {/* Main content */}
+        <div className="flex-1 flex flex-col">
+          {/* Chat interface */}
+          <div className="flex-1 flex overflow-hidden">
+            {/* Chat list */}
+            <div
+              className={`w-full md:w-1/3 bg-background border-r-2 border-dotted border-gray-900 flex flex-col ${
+                isMobile && selectedChat ? "hidden" : "block"
+              }`}
+            >
               <div className="p-4 bg-background/50">
                 <div className="relative">
                   <SearchIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
@@ -116,41 +175,59 @@ const MessagesPage = () => {
                         ? "bg-purple-800 border-b-0"
                         : ""
                     } transition-all duration-300 ease-in-out`}
-                    onClick={() => setSelectedChat(chat)}
+                    onClick={() => handleChatSelect(chat)}
                   >
-                    <img
+                    <Image
                       src={chat.avatar}
                       alt="Avatar"
-                      className="w-12 h-12 rounded-full mr-3"
+                      width={40}
+                      height={40}
+                      className="rounded-full"
                     />
-                    <div className="flex-1">
-                      <div className="flex justify-between items-baseline">
-                        <h3 className="font-semibold text-white">
-                          {chat.name}
-                        </h3>
-                        <span className="text-xs text-gray-400">
-                          {chat.time}
-                        </span>
+                    <div className="flex-1 ml-2 flex items-center justify-between">
+                      <div>
+                        <div className="flex justify-between items-baseline">
+                          <h3 className="font-semibold text-white">
+                            {chat.name}
+                          </h3>
+                        </div>
+                        <p className="text-sm text-gray-400 truncate">
+                          {chat.role}
+                        </p>
                       </div>
-                      <p className="text-sm text-gray-300 truncate">
-                        {chat.lastMessage}
-                      </p>
+                      {chat.unread && (
+                        <Badge
+                          className=" animate-pulse
+                      w-5 h-5 flex items-center justify-center rounded-full text-xs text-white ml-2
+                      "
+                        >
+                          {chat.unread}
+                        </Badge>
+                      )}
                     </div>
-                    {chat.unread && (
-                      <span className="bg-primary text-white rounded-full px-2 py-1 text-xs ml-2">
-                        {chat.unread}
-                      </span>
-                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Right chat area */}
-            <div className="flex-1 flex flex-col bg-background">
+            {/* Chat area */}
+            <div
+              className={`flex-1 flex flex-col bg-background ${
+                isMobile && !selectedChat ? "hidden" : "block"
+              }`}
+            >
               {selectedChat ? (
                 <>
                   <div className="bg-background/50 p-4 flex items-center border-l border-b-2 border-dotted border-gray-900">
+                    {isMobile && (
+                      <Button
+                        onClick={handleBackToList}
+                        variant="ghost"
+                        className="mr-2"
+                      >
+                        <ArrowLeft className="h-6 w-6 text-white" />
+                      </Button>
+                    )}
                     <img
                       src={selectedChat.avatar}
                       alt="Avatar"
@@ -175,7 +252,7 @@ const MessagesPage = () => {
                             message.sender === "agency"
                               ? "bg-purple-800"
                               : "bg-gray-800"
-                          } p-3 rounded-lg shadow max-w-xs`}
+                          } p-3 rounded-lg shadow max-w-xs lg:max-w-md`}
                         >
                           <p className="text-white">{message.content}</p>
                           <div className="text-right text-xs text-gray-400 mt-1">
@@ -191,8 +268,18 @@ const MessagesPage = () => {
                     <Input
                       placeholder="Type a message"
                       className="flex-1 bg-transparent text-white"
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handleSendMessage()
+                      }
                     />
-                    <Button className="bg-purple-950 ml-2">Send</Button>
+                    <Button
+                      className="bg-purple-950 ml-2"
+                      onClick={handleSendMessage}
+                    >
+                      Send
+                    </Button>
                   </div>
                 </>
               ) : (
