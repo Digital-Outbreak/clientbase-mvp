@@ -12,7 +12,7 @@ import { Plus, PlusCircle, PlusIcon } from "lucide-react";
 import AddClientDialog from "@/components/owners/AddClientDialog";
 import { getClientsByOwner } from "@/lib/db/client-queries";
 
-const AgencyHomePage = () => {
+const AgencyClientPage = () => {
   const [owner, setOwner] = useState<Owner>();
   const [clients, setClients] = useState<Client[]>([]);
   const params = useParams();
@@ -42,12 +42,22 @@ const AgencyHomePage = () => {
     <div className="flex h-screen">
       {owner && (
         <div className="lg:w-[20%] w-24 fixed h-full">
-          <OwnerSidebar owner={owner} active="home" />
+          <OwnerSidebar owner={owner} active="clients" />
         </div>
       )}
       <div className="flex-1 ml-[6rem] lg:ml-[20%]">
         <OwnerHeader className="border-b-2 border-gray-900 border-dotted" />
-        <div className="p-4">Analystics Here</div>
+        <div className="p-4">
+          <div className="flex justify-between">
+            <h1 className="text-3xl font-bold mb-4">Manage Clients</h1>
+            <AddClientDialog owner={owner}>
+              <Button className="flex gap-1 items-center">
+                <PlusCircle className="h-6 w-6" /> Add New Client
+              </Button>
+            </AddClientDialog>
+          </div>{" "}
+          <ClientTable client={clients} />
+        </div>
       </div>
     </div>
   ) : (
@@ -57,4 +67,4 @@ const AgencyHomePage = () => {
   );
 };
 
-export default AgencyHomePage;
+export default AgencyClientPage;

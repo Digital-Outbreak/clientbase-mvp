@@ -1,5 +1,12 @@
 import React from "react";
-import { Home, Settings, Users, CreditCard, UserPlus2 } from "lucide-react";
+import {
+  Home,
+  Settings,
+  Users,
+  CreditCard,
+  UserPlus2,
+  MessageCircleMore,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
@@ -30,6 +37,14 @@ const OwnerSidebar = ({
       `,
     },
     {
+      id: "Agency Messages",
+      icon: MessageCircleMore,
+      label: "Agency Messages",
+      slug: `
+      /${owner.companySlug}/clients/messages
+      `,
+    },
+    {
       id: "Invite",
       icon: UserPlus2,
       label: "Invite Team",
@@ -53,7 +68,6 @@ const OwnerSidebar = ({
       slug: `${owner.companySlug}/settings`,
     },
   ];
-
   const MenuItem = ({
     id,
     icon: Icon,
@@ -66,16 +80,16 @@ const OwnerSidebar = ({
     slug: string;
   }) => (
     <li>
-      <Link
+      <a
         href={slug}
         className={cn(
           "flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800",
-          active === id && "bg-purple-600 hover:bg-purple-700"
+          active === id ? "bg-purple-600 hover:bg-purple-700" : ""
         )}
       >
         <Icon className="mr-0 md:mr-3" size={22} />
         <span className="font-medium hidden md:inline">{label}</span>
-      </Link>
+      </a>
     </li>
   );
 
