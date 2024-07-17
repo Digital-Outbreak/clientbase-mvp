@@ -16,7 +16,7 @@ const OwnerSidebar = ({
   active,
 }: {
   owner: Owner;
-  active: "home" | "settings" | "clients";
+  active: "home" | "settings" | "clients" | "invite" | "agency-messages";
 }) => {
   const menuItems = [
     {
@@ -37,7 +37,7 @@ const OwnerSidebar = ({
       `,
     },
     {
-      id: "Agency Messages",
+      id: "agency-messages",
       icon: MessageCircleMore,
       label: "Agency Messages",
       slug: `
@@ -45,7 +45,7 @@ const OwnerSidebar = ({
       `,
     },
     {
-      id: "Invite",
+      id: "invite",
       icon: UserPlus2,
       label: "Invite Team",
       slug: `
@@ -96,13 +96,15 @@ const OwnerSidebar = ({
   return (
     <div className="w-20 md:w-64 h-screen bg-gray-900 text-white p-4 md:p-6 flex flex-col">
       <div className="flex items-center mb-10 justify-center md:justify-start">
-        <div className="w-10 h-10 rounded-lg md:mr-3">
+        <div className="w-10 h-10 rounded-full md:mr-3">
           <Image
             src={owner.companyIconUrl}
             alt={owner.companyName}
             width={40}
             height={40}
-            className="rounded-full"
+            className="rounded-full object-cover
+              h-10 w-10 md:h-12 md:w-12 lg:h-16 lg:w-16 xl:h-20 xl:w-20
+            "
           />
         </div>
         <h1 className="text-2xl font-bold hidden md:inline">

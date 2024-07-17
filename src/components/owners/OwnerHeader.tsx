@@ -28,7 +28,15 @@ const OwnerHeader = ({ className }: { className?: string }) => {
             </Button>
           </Link>
         ) : (
-          <div className="flex justify-center gap-5">
+          <div className="flex justify-center gap-2">
+            <Link href="">
+              <Button
+                variant="outline"
+                className="flex justify-center space-x-8 text-white"
+              >
+                Join existing Agency
+              </Button>
+            </Link>
             <UserButton />
             <Link href="/dashboard">
               <Button className="flex justify-center space-x-8 text-white">

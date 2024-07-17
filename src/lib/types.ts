@@ -11,7 +11,18 @@ interface Owner {
   companyIconUrl: string;
   role: "NOAGENCY" | "AGENCY";
   createdAt: Date;
+  teamRole: "ADMIN";
+  teamMembers: TeamMember[];
   updatedAt: Date;
+}
+
+interface TeamMember {
+  id: string;
+  clerkId: string;
+  email: string;
+  name: string;
+  teamRole: "ADMIN" | "MEMBER";
+  ownerId: string;
 }
 
 interface Client {
