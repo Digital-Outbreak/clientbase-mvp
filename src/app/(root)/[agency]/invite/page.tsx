@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { getClientsByOwner } from "@/lib/db/client-queries";
 import TeamTable from "@/components/owners/TeamTable";
+import TeamInviteDialog from "@/components/owners/TeamInviteDialog";
 
 const AgencyClientPage = () => {
   const [owner, setOwner] = useState<Owner>();
@@ -50,9 +51,11 @@ const AgencyClientPage = () => {
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold mb-4">Invite Team Members</h1>
 
-            <Button className="flex gap-1 items-center">
-              <PlusCircle className="h-6 w-6" /> Invite New Member
-            </Button>
+            <TeamInviteDialog owner={owner}>
+              <Button className="flex gap-1 items-center">
+                <PlusCircle className="h-6 w-6" /> Invite New Member
+              </Button>
+            </TeamInviteDialog>
           </div>
           <TeamTable />
         </div>
