@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
-import { Badge } from "../ui/badge";
+import AddTeamMemberDialog from "../team/AddTeamMemberDialog";
 
 const OwnerHeader = ({ className }: { className?: string }) => {
   const user = useUser();
@@ -28,22 +28,24 @@ const OwnerHeader = ({ className }: { className?: string }) => {
             </Button>
           </Link>
         ) : (
-          <div className="flex justify-center gap-2">
-            <Link href="">
-              <Button
-                variant="outline"
-                className="flex justify-center space-x-8 text-white"
-              >
-                Join existing Agency
-              </Button>
-            </Link>
-            <UserButton />
-            <Link href="/dashboard">
-              <Button className="flex justify-center space-x-8 text-white">
-                Dashboard
-              </Button>
-            </Link>
-          </div>
+          user.user.id && (
+            <div className="flex justify-center gap-2">
+              <AddTeamMemberDialog id={user.user.id}>
+                <Button
+                  variant="outline"
+                  className="flex justify-center space-x-8 text-white"
+                >
+                  Join existing Agency
+                </Button>
+              </AddTeamMemberDialog>
+              <UserButton />
+              <Link href="/dashboard">
+                <Button className="flex justify-center space-x-8 text-white">
+                  Dashboard
+                </Button>
+              </Link>
+            </div>
+          )
         )}
       </nav>
     </div>

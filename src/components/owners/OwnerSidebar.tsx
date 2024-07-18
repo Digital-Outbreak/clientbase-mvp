@@ -10,6 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const OwnerSidebar = ({
   owner,
@@ -23,34 +24,25 @@ const OwnerSidebar = ({
       id: "home",
       icon: Home,
       label: "Home",
-      slug: `
-/${owner.companySlug}
-      `,
+      slug: `/${owner.companySlug}`,
     },
-
     {
       id: "clients",
       icon: Users,
       label: "Clients",
-      slug: `
-      /${owner.companySlug}/clients
-      `,
+      slug: `/${owner.companySlug}/clients`,
     },
     {
       id: "agency-messages",
       icon: MessageCircleMore,
       label: "Agency Messages",
-      slug: `
-      /${owner.companySlug}/clients/messages
-      `,
+      slug: `/${owner.companySlug}/clients/messages`,
     },
     {
       id: "invite",
       icon: UserPlus2,
       label: "Invite Team",
-      slug: `
-      /${owner.companySlug}/invite
-      `,
+      slug: `/${owner.companySlug}/invite`,
     },
   ];
 
@@ -59,15 +51,16 @@ const OwnerSidebar = ({
       id: "Billing",
       icon: CreditCard,
       label: "Billing",
-      slug: `${owner.companySlug}/billing`,
+      slug: `/${owner.companySlug}/billing`,
     },
     {
       id: "settings",
       icon: Settings,
       label: "Settings",
-      slug: `${owner.companySlug}/settings`,
+      slug: `/${owner.companySlug}/settings`,
     },
   ];
+
   const MenuItem = ({
     id,
     icon: Icon,
@@ -95,18 +88,16 @@ const OwnerSidebar = ({
 
   return (
     <div className="w-20 md:w-64 h-screen bg-gray-900 text-white p-4 md:p-6 flex flex-col">
-      <div className="flex items-center mb-10 justify-center md:justify-start">
-        <div className="w-10 h-10 rounded-full md:mr-3">
-          <Image
-            src={owner.companyIconUrl}
-            alt={owner.companyName}
-            width={40}
-            height={40}
-            className="rounded-full object-cover
-              h-10 w-10 md:h-12 md:w-12 lg:h-16 lg:w-16 xl:h-20 xl:w-20
-            "
-          />
-        </div>
+      <div className="flex items-center mb-10 justify-center md:justify-start gap-3">
+        <Avatar>
+          <AvatarImage src={owner.companyIconUrl} />
+          <AvatarFallback>
+            {owner.companyName
+              .split(" ")
+              .map((word) => word[0])
+              .join("")}
+          </AvatarFallback>
+        </Avatar>
         <h1 className="text-2xl font-bold hidden md:inline">
           {owner.companyName}
         </h1>
