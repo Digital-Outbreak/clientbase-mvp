@@ -19,7 +19,7 @@ export const readSiteDomain = async (domain: string) => {
 
   try {
     const { data, error } = await supabase
-      .from("owners")
+      .from("Owner")
       .select("*")
       .eq("companySlug", domain);
 
@@ -27,8 +27,6 @@ export const readSiteDomain = async (domain: string) => {
       console.error("Error fetching data from Supabase:", error);
       return { error: error.message };
     }
-
-    console.log("Data:", data);
 
     return data;
   } catch (error: any) {

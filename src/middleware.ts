@@ -6,43 +6,56 @@ interface SiteDomainResponse {
   companySlug: string;
 }
 
-const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
+const isProtectedRoute = createRouteMatcher([
+  "/dashboard(.*)",
+  "/(api|trpc)(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) auth().protect();
+  const url = req.nextUrl;
+  const searchParams = url.searchParams.toString();
 
   const hostname = req.headers.get("host");
-  console.log("Hostname: ", hostname);
 
-  let currentHost;
+  const pathWithSearchParams = `${url.pathname}${
+    searchParams.length > 0 ? `?${searchParams}` : ""
+  }`;
+
+  let currentHost: string | undefined;
   if (process.env.NODE_ENV === "production") {
     const baseDomain = process.env.NEXT_URL;
     currentHost = hostname?.replace(`.${baseDomain}`, "");
   } else {
-    currentHost = hostname?.replace("localhost:3000", "");
+    currentHost = hostname?.replace(".localhost:3000", "");
   }
 
-  if (!currentHost) {
-    console.log("No subdomain found, serving root domain");
+  // Base URL should not be protected
+  if (!currentHost || currentHost === "localhost") {
+    console.log("No subdomain found or base URL, serving root domain");
     return NextResponse.next();
   }
 
-  console.log("Current subdomain: ", currentHost);
+  // Protect routes that are not the base URL
+  if (isProtectedRoute(req)) {
+    auth().protect();
+  }
 
+  // Fetch and handle site domain
   const response = await readSiteDomain(currentHost);
 
   if ("error" in response) {
     console.error("Error fetching site domain:", response.error);
-    return NextResponse.next();
+    return NextResponse.error();
   }
 
   if (Array.isArray(response) && response.length > 0) {
     const siteDomain: SiteDomainResponse = response[0];
     const tenantSubdomain = siteDomain.companySlug;
-    console.log("Tenant subdomain: ", tenantSubdomain);
 
     if (tenantSubdomain) {
-      return NextResponse.rewrite(new URL(`/${tenantSubdomain}`, req.url));
+      return NextResponse.rewrite(
+        new URL(`/${tenantSubdomain}${pathWithSearchParams}`, req.url)
+      );
     }
   }
 
