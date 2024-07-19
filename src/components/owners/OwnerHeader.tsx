@@ -30,7 +30,7 @@ const OwnerHeader = ({ className }: { className?: string }) => {
         ) : (
           user.user.id && (
             <div className="flex justify-center gap-2">
-              <AddTeamMemberDialog id={user.user.id}>
+              <AddTeamMemberDialog>
                 <Button
                   variant="outline"
                   className="flex justify-center space-x-8 text-white"

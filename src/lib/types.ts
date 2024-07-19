@@ -1,18 +1,17 @@
-// TypeScript types generated from Prisma schema
-
 interface Owner {
   id: string;
   clerkId: string;
   email: string;
   name: string;
   companyName: string;
-  imageUrl: string;
   companySlug: string | null;
+  imageUrl: string;
   companyIconUrl: string;
   role: "NOAGENCY" | "AGENCY";
-  createdAt: Date;
-  teamRole: "ADMIN";
+  teamRole: "ADMIN" | "MEMBER";
   teamMembers: TeamMember[];
+  clients: Client[];
+  createdAt: Date;
   updatedAt: Date;
 }
 
@@ -23,6 +22,8 @@ interface TeamMember {
   name: string;
   teamRole: "ADMIN" | "MEMBER";
   ownerId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface Client {
@@ -42,6 +43,7 @@ interface Client {
   createdAt: Date;
   updatedAt: Date;
 }
+
 interface FileData {
   id: string;
   name: string;
@@ -56,4 +58,15 @@ interface KanbanCard {
   dueDate: Date;
   lane: "Backlog" | "Todo" | "InProgress" | "Done";
   clientId: string | null;
+}
+
+// Enums
+enum OwnerRole {
+  NOAGENCY = "NOAGENCY",
+  AGENCY = "AGENCY",
+}
+
+enum TeamMemberRole {
+  ADMIN = "ADMIN",
+  MEMBER = "MEMBER",
 }
