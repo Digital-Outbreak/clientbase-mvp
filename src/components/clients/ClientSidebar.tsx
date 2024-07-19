@@ -8,9 +8,9 @@ import {
   MessageCircleMore,
   UserPlus2,
 } from "lucide-react";
-import Image from "next/image";
 import { generateCustomSlug } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 type ClientSidebarProps = {
   client: Client;
@@ -81,16 +81,16 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
 
   return (
     <div className="w-20 md:w-64 h-screen bg-gray-900 text-white p-4 md:p-6 flex flex-col">
-      <div className="flex items-center mb-10 justify-center md:justify-start">
-        <div className="w-10 h-10 rounded-lg md:mr-3">
-          <Image
-            src={client.pfpUrl}
-            alt={client.companyName}
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-        </div>
+      <div className="flex gap-2 items-center mb-10 justify-center md:justify-start">
+        <Avatar>
+          <AvatarImage src={client.pfpUrl} />
+          <AvatarFallback>
+            {client.clientCompany
+              .split(" ")
+              .map((word) => word[0])
+              .join("")}
+          </AvatarFallback>
+        </Avatar>
         <h1 className="text-2xl font-bold hidden md:inline">
           {client.companyName}
         </h1>
@@ -112,17 +112,19 @@ const ClientSidebar = ({ client, active }: ClientSidebarProps) => {
           {/* for messages only */}
           <MenuItem
             id="message"
-            href={`/${agencySlug}/${clientSlug}/message`}
+            href={`/${agencySlug}/${clientSlug}/messages`}
             icon={MessageCircleMore}
             label="Messages"
           />
-          {/* invite */}
+          {/* 
+          TODO: Later Work
+          invite
           <MenuItem
             id="invite"
             href={`/${agencySlug}/${clientSlug}/invite`}
             icon={UserPlus2}
             label="Invite Team"
-          />
+          /> */}
         </ul>
       </div>
     </div>

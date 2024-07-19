@@ -116,3 +116,19 @@ export const addTeamMember = async (user: {
     return null;
   }
 };
+
+export const getOwnerWithTeamMembers = async (ownerId: string) => {
+  try {
+    const owner = await prisma.owner.findUnique({
+      where: { id: ownerId },
+      include: { teamMembers: true },
+    });
+    if (!owner) {
+      throw new Error("Owner not found");
+    }
+    return owner;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

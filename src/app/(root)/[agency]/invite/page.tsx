@@ -57,7 +57,7 @@ const AgencyClientPage = () => {
               </Button>
             </TeamInviteDialog>
           </div>
-          <TeamTable />
+          <TeamTable owner={owner} />
         </div>
       </div>
     </div>

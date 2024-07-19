@@ -35,7 +35,7 @@ export interface Message {
 const chats: Chat[] = [
   {
     id: "1",
-    name: "Joey",
+    name: "Owner",
     role: "Owner",
     lastMessage: "Can we schedule a meeting?",
     time: "Yesterday",
@@ -44,34 +44,13 @@ const chats: Chat[] = [
   },
   {
     id: "2",
-    name: "Shrit Shrivastava",
+    name: "Team",
     role: "Designer",
 
     lastMessage: "Here is the document you requested.",
     time: "Yesterday",
     avatar:
       "https://cdn.discordapp.com/avatars/735700217118195772/eebf7f7eece02036fa0a4645d63e164f?size=1024",
-  },
-  {
-    id: "3",
-    name: "Bell",
-    role: "Content Manager",
-
-    lastMessage: "Looking forward to the proposal.",
-    time: "Yesterday",
-    avatar:
-      "https://cdn.discordapp.com/avatars/888318454761918496/53f40c86bb41f781e56e2946c1dc077d?size=1024",
-    unread: 3,
-  },
-  {
-    id: "3",
-    name: "Tommy",
-    role: "Owner",
-
-    lastMessage: "Looking forward to the proposal.",
-    time: "Yesterday",
-    avatar:
-      "https://cdn.discordapp.com/avatars/1024124087259373648/7f3069d4eabaabddabcb7c372a1ff9ba?size=1024",
   },
 ];
 

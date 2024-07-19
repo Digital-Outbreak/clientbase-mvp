@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,6 +13,8 @@ import { SettingsIcon } from "lucide-react";
 import Link from "next/link";
 import { generateCustomSlug } from "@/lib/data";
 import { showWIPToast } from "@/lib/utils";
+import { Owner } from "@prisma/client";
+import { getOwnerWithTeamMembers } from "@/lib/db/owner-queries";
 
 type formClient = {
   name: string;
@@ -22,7 +24,15 @@ type formClient = {
   createdAt: Date;
 };
 
-const TeamTable = () => {
+const TeamTable = ({ owner }: { owner: Owner }) => {
+  const [teamMembers, setTeamMembers] = useState<[]>([]);
+  useEffect(() => {
+    const fetchOwner = async () => {
+      const teamMember = await getOwnerWithTeamMembers(owner.id);
+      setTeamMembers(teamMember.teamMembers as []);
+    };
+    fetchOwner();
+  }, []);
   return (
     <Table className="z-1">
       <TableHeader>
@@ -33,23 +43,22 @@ const TeamTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>Hello</TableCell>
-          <TableCell>hello@gmailcom</TableCell>
-          <TableCell>
-            <Moment fromNow>{new Date().toISOString()}</Moment>
-          </TableCell>
-          <TableCell
-            className="flex flex-col md:flex-row
-             gap-3"
-          >
-            <Link href="">
-              <Button variant="outline" className="border-purple-600 w-full">
-                Settings
-              </Button>
-            </Link>
-          </TableCell>
-        </TableRow>
+        {teamMembers.map((member: formClient) => (
+          <TableRow key={member.email}>
+            <TableCell>{member.name}</TableCell>
+            <TableCell>{member.email}</TableCell>
+            <TableCell>
+              <Moment fromNow>{member.createdAt}</Moment>
+            </TableCell>
+            <TableCell className="flex flex-col md:flex-row gap-3">
+              <Link href={`/owners/${owner.id}/team/${member.clientslug}`}>
+                <Button variant="outline" className="border-purple-600 w-full">
+                  Settings
+                </Button>
+              </Link>
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
