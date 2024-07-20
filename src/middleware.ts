@@ -1,67 +1,45 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { authMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { readSiteDomain } from "./lib/db/site-domain";
 
-interface SiteDomainResponse {
-  companySlug: string;
-}
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
+// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
+export default authMiddleware({
+  publicRoutes: ["/site", "/api/uploadthing"],
+  async afterAuth(auth, req) {
+    //rewrite for domains
+    const url = req.nextUrl;
+    const searchParams = url.searchParams.toString();
+    let hostname = req.headers;
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/(api|trpc)(.*)",
-]);
+    const pathWithSearchParams = `${url.pathname}${
+      searchParams.length > 0 ? `?${searchParams}` : ""
+    }`;
 
-export default clerkMiddleware(async (auth, req) => {
-  const url = req.nextUrl;
-  const searchParams = url.searchParams.toString();
+    //if subdomain exists
+    const customSubDomain = hostname.get("host")?.split(".")?.[0];
 
-  const hostname = req.headers.get("host");
+    console.log(customSubDomain);
 
-  const pathWithSearchParams = `${url.pathname}${
-    searchParams.length > 0 ? `?${searchParams}` : ""
-  }`;
-
-  let currentHost: string | undefined;
-  if (process.env.NODE_ENV === "production") {
-    const baseDomain = process.env.NEXT_URL;
-    currentHost = hostname?.replace(`.${baseDomain}`, "");
-  } else {
-    currentHost = hostname?.replace(".localhost:3000", "");
-  }
-
-  // Base URL should not be protected
-  if (!currentHost || currentHost === "localhost") {
-    console.log("No subdomain found or base URL, serving root domain");
-    return NextResponse.next();
-  }
-
-  // Protect routes that are not the base URL
-  if (isProtectedRoute(req)) {
-    auth().protect();
-  }
-
-  // Fetch and handle site domain
-  const response = await readSiteDomain(currentHost);
-
-  if ("error" in response) {
-    console.error("Error fetching site domain:", response.error);
-    return NextResponse.error();
-  }
-
-  if (Array.isArray(response) && response.length > 0) {
-    const siteDomain: SiteDomainResponse = response[0];
-    const tenantSubdomain = siteDomain.companySlug;
-
-    if (tenantSubdomain) {
+    if (customSubDomain) {
       return NextResponse.rewrite(
-        new URL(`/${tenantSubdomain}${pathWithSearchParams}`, req.url)
+        new URL(`/${customSubDomain}${pathWithSearchParams}`, req.url)
       );
     }
-  }
 
-  return NextResponse.next();
+    if (url.pathname === "/sign-in" || url.pathname === "/sign-up") {
+      return NextResponse.redirect(new URL(`/sign-in`, req.url));
+    }
+
+    if (
+      url.pathname === "/" ||
+      (url.pathname === "/site" && url.host === process.env.NEXT_URL)
+    ) {
+      return NextResponse.rewrite(new URL("/site", req.url));
+    }
+  },
 });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };
