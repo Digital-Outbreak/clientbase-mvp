@@ -11,10 +11,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ClientSidebar from "@/components/clients/ClientSidebar";
-import { getClientBySlug } from "@/lib/db/client-queries";
+import { getChannelsByClient, getClientBySlug } from "@/lib/db/client-queries";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@clerk/nextjs";
+import { Channel } from "@prisma/client";
 
 export interface Chat {
   id: string;
@@ -83,6 +84,7 @@ const MessagesPage: React.FC = () => {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
   const [isMobile, setIsMobile] = useState(false);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
   const params = useParams();
 
@@ -102,8 +104,28 @@ const MessagesPage: React.FC = () => {
 
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      setClient(null);
+      setChannels([]);
+    };
   }, [params.client]);
+
+  useEffect(() => {
+    if (client) {
+      const fetchChannels = async () => {
+        const fetchedChannels = await getChannelsByClient(client.id);
+        setChannels(fetchedChannels as any);
+      };
+
+      fetchChannels();
+      return () => {
+        setChannels([]);
+      };
+    }
+  }, [client]);
+
+  console.log("out", channels);
 
   const handleSendMessage = async () => {
     if (!user.isLoaded) return;

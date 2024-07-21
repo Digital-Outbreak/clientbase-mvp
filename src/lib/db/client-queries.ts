@@ -175,3 +175,17 @@ export const updateKanbanCardLane = async (
     return null;
   }
 };
+
+export const getChannelsByClient = async (clientId: string) => {
+  console.log("clientId", clientId);
+
+  try {
+    const channels = await prisma.channel.findMany({
+      where: { clientId },
+    });
+    return channels;
+  } catch (error: any) {
+    console.error(`Error getting channels: ${error.message}`);
+    return null;
+  }
+};

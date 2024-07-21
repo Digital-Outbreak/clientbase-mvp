@@ -64,6 +64,18 @@ export const createClient = async (client: any) => {
         password: client.password,
         pfpUrl: client.pfpUrl,
         bannerUrl: client.bannerUrl,
+        channels: {
+          create: [
+            {
+              name: "owner-channel",
+              ownerId: client.ownerId,
+            },
+            {
+              name: "client-channel",
+              ownerId: client.ownerId,
+            },
+          ],
+        },
 
         ownerId: client.ownerId,
         clientCompany: client.clientCompany,
