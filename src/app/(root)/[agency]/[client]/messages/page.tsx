@@ -14,6 +14,7 @@ import ClientSidebar from "@/components/clients/ClientSidebar";
 import { getClientBySlug } from "@/lib/db/client-queries";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { useUser } from "@clerk/nextjs";
 
 export interface Chat {
   id: string;
@@ -76,6 +77,8 @@ const messages: Message[] = [
 ];
 
 const MessagesPage: React.FC = () => {
+  const user = useUser();
+
   const [client, setClient] = useState<Client | null>(null);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [newMessage, setNewMessage] = useState("");
@@ -102,10 +105,39 @@ const MessagesPage: React.FC = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, [params.client]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      console.log("Sending message:", newMessage);
-      setNewMessage("");
+  const handleSendMessage = async () => {
+    if (!user.isLoaded) return;
+    let sendBy = "";
+    if (user.isSignedIn) {
+      sendBy = "OWNER";
+    } else {
+      sendBy = "CLIENT";
+    }
+
+    if (newMessage.trim() && client && selectedChat) {
+      const channelName =
+        selectedChat.role.toLowerCase() === "owner" ? "owner" : "client";
+
+      try {
+        // const newMessageObj = await insertChatMessage({
+        //   ownerId: client.ownerId,
+        //   clientId: client.id,
+        //   message: newMessage,
+        //   sendBy,
+        //   channelName,
+        // });
+
+        console.log("Message sent:", {
+          ownerId: client.ownerId,
+          clientId: client.id,
+          message: newMessage,
+          sendBy,
+          channelName,
+        });
+        setNewMessage("");
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
     }
   };
 
@@ -176,7 +208,7 @@ const MessagesPage: React.FC = () => {
                       </div>
                       {chat.unread && (
                         <Badge
-                          className=" animate-pulse
+                          className="animate-pulse
                       w-5 h-5 flex items-center justify-center rounded-full text-xs text-white ml-2
                       "
                         >
@@ -243,7 +275,6 @@ const MessagesPage: React.FC = () => {
                   </div>
                   <div className="bg-background/50 border-dotted border-t-2 border-gray-900 p-4 flex items-center">
                     <Smile className="h-6 w-6 text-gray-400 mr-2 cursor-pointer" />
-                    <PaperclipIcon className="h-6 w-6 text-gray-400 mr-2 cursor-pointer" />
                     <Input
                       placeholder="Type a message"
                       className="flex-1 bg-transparent text-white"
@@ -254,6 +285,7 @@ const MessagesPage: React.FC = () => {
                       }
                     />
                     <Button
+                      disabled={!newMessage.trim()}
                       className="bg-purple-950 ml-2"
                       onClick={handleSendMessage}
                     >

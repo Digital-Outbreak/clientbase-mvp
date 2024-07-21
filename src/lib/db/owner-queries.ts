@@ -64,6 +64,7 @@ export const createClient = async (client: any) => {
         password: client.password,
         pfpUrl: client.pfpUrl,
         bannerUrl: client.bannerUrl,
+
         ownerId: client.ownerId,
         clientCompany: client.clientCompany,
         links: [],

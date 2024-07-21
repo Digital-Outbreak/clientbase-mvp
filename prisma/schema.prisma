@@ -70,7 +70,8 @@ model Client {
   links         String[]
   KanbanCard    KanbanCard[]
   createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  updatedAt     DateTime     @default(now()) @updatedAt
+  channels      Channel[]
 
   owner Owner @relation(fields: [ownerId], references: [id])
 }
@@ -103,4 +104,37 @@ model KanbanCard {
 
   clientId String?
   Client   Client? @relation(fields: [clientId], references: [id])
+}
+
+enum ppl {
+  CLIENT
+  OWNER
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  ownerId   String
+  message   String
+  sendBy    ppl
+  channelId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  sentAt    DateTime @default(now())
+
+  clientId String
+  senderId String?
+
+  Channel Channel @relation(fields: [channelId], references: [id])
+}
+
+model Channel {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  clientId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Messages Message[]
+  Client   Client    @relation(fields: [clientId], references: [id])
 }

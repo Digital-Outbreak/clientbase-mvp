@@ -24,25 +24,25 @@ const OwnerSidebar = ({
       id: "home",
       icon: Home,
       label: "Home",
-      slug: `/`,
+      slug: `/${owner.companySlug}`,
     },
     {
       id: "clients",
       icon: Users,
       label: "Clients",
-      slug: `/clients`,
+      slug: `/${owner.companySlug}/clients`,
     },
-    {
-      id: "agency-messages",
-      icon: MessageCircleMore,
-      label: "Agency Messages",
-      slug: `/clients/messages`,
-    },
+    // {
+    //   id: "agency-messages",
+    //   icon: MessageCircleMore,
+    //   label: "Agency Messages",
+    //   slug: `/${owner.companySlug}/clients/messages`,
+    // },
     {
       id: "invite",
       icon: UserPlus2,
       label: "Invite Team",
-      slug: `/invite`,
+      slug: `/${owner.companySlug}/invite`,
     },
   ];
 
@@ -51,13 +51,13 @@ const OwnerSidebar = ({
       id: "Billing",
       icon: CreditCard,
       label: "Billing",
-      slug: `/billing`,
+      slug: `/${owner.companySlug}/billing`,
     },
     {
       id: "settings",
       icon: Settings,
       label: "Settings",
-      slug: `/settings`,
+      slug: `/${owner.companySlug}/settings`,
     },
   ];
 
