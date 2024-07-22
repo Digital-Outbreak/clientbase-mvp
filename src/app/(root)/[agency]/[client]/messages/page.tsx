@@ -16,6 +16,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useUser } from "@clerk/nextjs";
 import { Channel } from "@prisma/client";
+import Loading from "@/components/global/loading";
 
 export interface Chat {
   id: string;
@@ -41,8 +42,7 @@ const chats: Chat[] = [
     role: "Owner",
     lastMessage: "Can we schedule a meeting?",
     time: "Yesterday",
-    avatar:
-      "https://cdn.discordapp.com/avatars/204772159699025920/e720fb269a53da2f015af5833f1b840b?size=1024",
+    avatar: "",
   },
   {
     id: "2",
@@ -51,8 +51,7 @@ const chats: Chat[] = [
 
     lastMessage: "Here is the document you requested.",
     time: "Yesterday",
-    avatar:
-      "https://cdn.discordapp.com/avatars/735700217118195772/eebf7f7eece02036fa0a4645d63e164f?size=1024",
+    avatar: "",
   },
 ];
 
@@ -79,6 +78,11 @@ const messages: Message[] = [
 
 const MessagesPage: React.FC = () => {
   const user = useUser();
+
+  const ownerImage =
+    "https://cdn.discordapp.com/avatars/204772159699025920/e720fb269a53da2f015af5833f1b840b?size=1024";
+  const clientImage =
+    "https://cdn.discordapp.com/avatars/735700217118195772/eebf7f7eece02036fa0a4645d63e164f?size=1024";
 
   const [client, setClient] = useState<Client | null>(null);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
@@ -115,7 +119,7 @@ const MessagesPage: React.FC = () => {
     if (client) {
       const fetchChannels = async () => {
         const fetchedChannels = await getChannelsByClient(client.id);
-        setChannels(fetchedChannels as any);
+        setChannels(fetchedChannels as Channel[]);
       };
 
       fetchChannels();
@@ -124,8 +128,6 @@ const MessagesPage: React.FC = () => {
       };
     }
   }, [client]);
-
-  console.log("out", channels);
 
   const handleSendMessage = async () => {
     if (!user.isLoaded) return;
@@ -200,46 +202,61 @@ const MessagesPage: React.FC = () => {
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto">
-                {chats.map((chat) => (
-                  <div
-                    key={chat.id}
-                    className={`flex items-center p-3 border-b-2 border-dotted border-gray-900 hover:bg-purple-700 cursor-pointer ${
-                      selectedChat?.id === chat.id
-                        ? "bg-purple-800 border-b-0"
-                        : ""
-                    } transition-all duration-300 ease-in-out`}
-                    onClick={() => handleChatSelect(chat)}
-                  >
-                    <Image
-                      src={chat.avatar}
-                      alt="Avatar"
-                      width={40}
-                      height={40}
-                      className="rounded-full"
-                    />
-                    <div className="flex-1 ml-2 flex items-center justify-between">
-                      <div>
-                        <div className="flex justify-between items-baseline">
-                          <h3 className="font-semibold text-white">
-                            {chat.name}
-                          </h3>
+                {channels ? (
+                  channels.map((chat: Channel) => (
+                    <div
+                      key={chat.id}
+                      className={`flex items-center p-3 border-b-2 border-dotted border-gray-900 hover:bg-purple-700 cursor-pointer ${
+                        selectedChat?.id === chat.id
+                          ? "bg-purple-800 border-b-0"
+                          : ""
+                      } transition-all duration-300 ease-in-out`}
+                      // onClick={() => handleChatSelect(chat)}
+                    >
+                      <Image
+                        src={
+                          chat.name.toLowerCase() === "owner-channel"
+                            ? ownerImage
+                            : clientImage
+                        }
+                        alt="Avatar"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                      <div className="flex-1 ml-2 flex items-center justify-between">
+                        <div>
+                          <div className="flex justify-between items-baseline">
+                            <h3 className="font-semibold text-white">
+                              {chat.name.toLowerCase() === "owner-channel"
+                                ? "Owner"
+                                : "Client"}
+                            </h3>
+                          </div>
+                          <p className="text-sm text-gray-400 truncate">
+                            {/* {chat.role} */}
+                          </p>
                         </div>
-                        <p className="text-sm text-gray-400 truncate">
-                          {chat.role}
-                        </p>
+                        {/* {chat.unread && (
+                          <Badge
+                            className="animate-pulse
+                        w-5 h-5 flex items-center justify-center rounded-full text-xs text-white ml-2
+                        "
+                          >
+                            {chat.unread} */}
+                        {/* </Badge> */}
+                        {/* )} */}
                       </div>
-                      {chat.unread && (
-                        <Badge
-                          className="animate-pulse
-                      w-5 h-5 flex items-center justify-center rounded-full text-xs text-white ml-2
-                      "
-                        >
-                          {chat.unread}
-                        </Badge>
-                      )}
                     </div>
+                  ))
+                ) : (
+                  <div
+                    className="flex justify-center items-center h-32 w-full
+                  "
+                  >
+                    <Loading />
                   </div>
-                ))}
+                )}
               </div>
             </div>
 

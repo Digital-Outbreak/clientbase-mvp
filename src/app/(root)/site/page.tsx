@@ -26,7 +26,6 @@ export default function Home() {
               </Link>
             </div>
           </div>
-
           <div className="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
             <Image
               src={LandingImage}
@@ -39,7 +38,7 @@ export default function Home() {
         </div>
       </div>
 
-      <section className="py-16 ">
+      <section className="py-16">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
             Key Features
@@ -70,6 +69,41 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="py-16 bg-gray-100">
+        <div className="container mx-auto px-4 lg:px-8">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
+            How It Works
+          </h2>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">Step 1: Sign Up</h3>
+              <p className="text-base text-primary-foreground/70">
+                Create an account to get started with our client management
+                portal.
+              </p>
+            </div>
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">
+                Step 2: Add Clients
+              </h3>
+              <p className="text-base text-primary-foreground/70">
+                Easily add and manage your clients through our intuitive
+                interface.
+              </p>
+            </div>
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">
+                Step 3: Start Managing
+              </h3>
+              <p className="text-base text-primary-foreground/70">
+                Use our powerful tools to manage tasks, communicate in
+                real-time, and keep everything organized.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-16">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
@@ -89,6 +123,43 @@ export default function Home() {
                 with clients has never been smoother."
               </p>
               <p className="font-semibold">John Smith, Project Manager</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 bg-gray-100">
+        <div className="container mx-auto px-4 lg:px-8">
+          <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
+            Frequently Asked Questions
+          </h2>
+          <div className="flex flex-col lg:flex-row gap-8">
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">
+                Is there a free trial available?
+              </h3>
+              <p className="text-base text-primary-foreground/70">
+                Yes, we offer a 14-day free trial for all new users. You can
+                explore all features without any commitment.
+              </p>
+            </div>
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">
+                How secure is my data?
+              </h3>
+              <p className="text-base text-primary-foreground/70">
+                We take data security very seriously. All your data is encrypted
+                and stored securely on our servers.
+              </p>
+            </div>
+            <div className="flex-1 rounded-lg shadow-lg p-6">
+              <h3 className="text-xl font-semibold mb-4">
+                Can I cancel at any time?
+              </h3>
+              <p className="text-base text-primary-foreground/70">
+                Yes, you can cancel your subscription at any time without any
+                penalties.
+              </p>
             </div>
           </div>
         </div>

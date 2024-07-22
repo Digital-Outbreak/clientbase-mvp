@@ -177,8 +177,6 @@ export const updateKanbanCardLane = async (
 };
 
 export const getChannelsByClient = async (clientId: string) => {
-  console.log("clientId", clientId);
-
   try {
     const channels = await prisma.channel.findMany({
       where: { clientId },
