@@ -187,3 +187,15 @@ export const getChannelsByClient = async (clientId: string) => {
     return null;
   }
 };
+
+export const getMessagesFromChannelId = async (channelId: string) => {
+  try {
+    const messages = await prisma.message.findMany({
+      where: { channelId },
+    });
+    return messages;
+  } catch (error: any) {
+    console.error(`Error getting messages: ${error.message}`);
+    return null;
+  }
+};
