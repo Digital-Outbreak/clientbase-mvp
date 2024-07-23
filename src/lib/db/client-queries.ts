@@ -199,3 +199,37 @@ export const getMessagesFromChannelId = async (channelId: string) => {
     return null;
   }
 };
+export const sendAMessage = async (
+  channelId: string,
+  message: string,
+  senderId: string,
+  ownerId: string,
+  sendBy: "OWNER" | "CLIENT",
+  clientId: string
+) => {
+  try {
+    // Check if the channel exists
+    const channelExists = await prisma.channel.findUnique({
+      where: { id: channelId },
+    });
+
+    if (!channelExists) {
+      throw new Error("Channel does not exist");
+    }
+
+    const newMessage = await prisma.message.create({
+      data: {
+        message,
+        channelId,
+        senderId,
+        ownerId,
+        sendBy,
+        clientId,
+      },
+    });
+    return newMessage;
+  } catch (error: any) {
+    console.error(`Error sending message: ${error.message}`);
+    return null;
+  }
+};

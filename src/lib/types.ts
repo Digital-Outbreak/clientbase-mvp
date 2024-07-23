@@ -70,3 +70,16 @@ enum TeamMemberRole {
   ADMIN = "ADMIN",
   MEMBER = "MEMBER",
 }
+
+interface Chat {
+  id: string;
+  name: string;
+  avatar: string;
+}
+
+interface Message {
+  id: string;
+  content: string;
+  sender: string;
+  time: string;
+}
