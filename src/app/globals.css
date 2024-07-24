@@ -84,7 +84,6 @@
 }
 
 /* fading of the text */
-
 .fade-out {
   position: relative;
   overflow: hidden;
@@ -98,15 +97,15 @@
 
 .fade-text::after {
   content: "";
-  z-index: 999;
+  z-index: 1;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 3rem; /* Height of the fade effect */
+  height: 1.5rem; /* Height of the fade effect */
   background: linear-gradient(
-    to top,
-    /* make it blend in 0e0a26*/ rgba(14, 10, 38, 1),
-    rgba(14, 10, 38, 0.2)
+    to bottom,
+    rgba(255, 255, 255, 0),
+    var(--background)
   );
 }

@@ -18,20 +18,9 @@ const OwnerHeader = ({ className }: { className?: string }) => {
       >
         <div className="relative">
           <Image src={logo} alt="logo" width={50} />
-          <Badge className="absolute top-0 left-0">Beta</Badge>
+          <Badge className="absolute top-0 left-0">MVP</Badge>
         </div>
-        <p
-          className="
-          text-3xl
-          font-bold
-          text-white
-          ml-2
-          hover:text-gray-300
-          transition
-          duration-300
-          ease-in-out
-        "
-        >
+        <p className="text-3xl font-bold text-white ml-2 hover:text-gray-300 transition duration-300 ease-in-out">
           Client<span className="text-purple-300">base</span>
         </p>
       </Link>

@@ -69,20 +69,20 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-100">
+      <section className="py-16">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
             How It Works
           </h2>
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="flex-1 rounded-lg shadow-lg p-6">
+          <div className="flex  flex-col lg:flex-row gap-8">
+            <div className="flex-1 bg-primary/50 rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-4">Step 1: Sign Up</h3>
               <p className="text-base text-primary-foreground/70">
-                Create an account to get started with our client management
-                portal.
+                Create an account and set up your agency to get started with our
+                client management portal.
               </p>
             </div>
-            <div className="flex-1 rounded-lg shadow-lg p-6">
+            <div className="flex-1 bg-primary/50 rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-4">
                 Step 2: Add Clients
               </h3>
@@ -91,7 +91,7 @@ export default function Home() {
                 interface.
               </p>
             </div>
-            <div className="flex-1 rounded-lg shadow-lg p-6">
+            <div className="flex-1 bg-primary/50 rounded-lg shadow-lg p-6">
               <h3 className="text-xl font-semibold mb-4">
                 Step 3: Start Managing
               </h3>
@@ -129,7 +129,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 bg-gray-100">
+      {/* <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4 lg:px-8">
           <h2 className="text-2xl lg:text-4xl font-bold text-center mb-12">
             Frequently Asked Questions
@@ -164,7 +164,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="bg-purple-950 py-16">
         <div className="container mx-auto px-4 lg:px-8 text-center">

@@ -160,11 +160,6 @@ export const updateKanbanCardLane = async (
   lane: "Backlog" | "Todo" | "InProgress" | "Done"
 ) => {
   try {
-    lane = lane.replace(/\s/g, "") as
-      | "Backlog"
-      | "Todo"
-      | "InProgress"
-      | "Done";
     const updatedCard = await prisma.kanbanCard.update({
       where: { id: cardId },
       data: { lane },

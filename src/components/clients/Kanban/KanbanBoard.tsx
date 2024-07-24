@@ -16,7 +16,7 @@ import {
 import { showToast } from "@/lib/utils";
 
 const KanbanBoard = ({ client }: { client: Client }) => {
-  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [loading, setLoading] = useState(true);
   const [todoItems, setTodoItems] = useState<KanbanCard[]>([]);
   const [doneItems, setDoneItems] = useState<KanbanCard[]>([]);
   const [inProgressItems, setInProgressItems] = useState<KanbanCard[]>([]);
@@ -57,7 +57,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        setLoading(true); // Set loading to true when fetching starts
+        setLoading(true);
 
         const [backlogCards, todoCards, inProgressCards, doneCards] =
           await Promise.all([
@@ -77,7 +77,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
         console.error("Error fetching cards:", error);
         showToast("Error fetching cards");
       } finally {
-        setLoading(false); // Set loading to false when fetching is complete
+        setLoading(false);
       }
     };
 
@@ -98,10 +98,10 @@ const KanbanBoard = ({ client }: { client: Client }) => {
     const findCard = (items: KanbanCard[], id: string) =>
       items.find((item) => item.id === id);
 
-    let movedCard;
+    let movedCard: KanbanCard | undefined;
 
     switch (fromContainer) {
-      case "ToDo":
+      case "Todo":
         movedCard = findCard(todoItems, draggedItemId);
         setTodoItems((prevItems) => removeCard(prevItems, draggedItemId));
         break;
@@ -123,37 +123,31 @@ const KanbanBoard = ({ client }: { client: Client }) => {
 
     if (!movedCard) return;
 
-    // Explicitly define type of toContainer as keyof typeof containerItems
-    const containerItems: { [key: string]: KanbanCard[] } = {
-      ToDo: todoItems,
-      InProgress: inProgressItems,
-      Done: doneItems,
-      Backlog: backlogItems,
-    };
-
-    const targetContainer = containerItems[toContainer]; // Access using bracket notation
-
-    if (!targetContainer) return;
-
-    const oldIndex = active.data.current.index;
-    const newIndex = targetContainer.findIndex((item) => item.id === over.id);
-
-    const newItems = [...targetContainer];
-    newItems.splice(oldIndex, 1);
-    newItems.splice(newIndex, 0, movedCard);
-
+    // Determine target container and update state accordingly
     switch (toContainer) {
-      case "ToDo":
-        setTodoItems(newItems);
+      case "Todo":
+        setTodoItems((prevItems) => [
+          ...prevItems,
+          { ...movedCard, lane: "Todo" },
+        ]);
         break;
       case "InProgress":
-        setInProgressItems(newItems);
+        setInProgressItems((prevItems) => [
+          ...prevItems,
+          { ...movedCard, lane: "InProgress" },
+        ]);
         break;
       case "Done":
-        setDoneItems(newItems);
+        setDoneItems((prevItems) => [
+          ...prevItems,
+          { ...movedCard, lane: "Done" },
+        ]);
         break;
       case "Backlog":
-        setBacklogItems(newItems);
+        setBacklogItems((prevItems) => [
+          ...prevItems,
+          { ...movedCard, lane: "Backlog" },
+        ]);
         break;
       default:
         break;
@@ -161,7 +155,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
 
     try {
       await updateKanbanCardLane(
-        client.id,
+        movedCard.id,
         toContainer as "Backlog" | "Todo" | "InProgress" | "Done"
       );
     } catch (error) {
@@ -188,7 +182,7 @@ const KanbanBoard = ({ client }: { client: Client }) => {
         <AddCard client={client} addCard={addNewCard} />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <KanbanLane title="Backlog" items={backlogItems} />
-          <KanbanLane title="ToDo" items={todoItems} />
+          <KanbanLane title="Todo" items={todoItems} />
           <KanbanLane title="InProgress" items={inProgressItems} />
           <KanbanLane title="Done" items={doneItems} />
         </div>
