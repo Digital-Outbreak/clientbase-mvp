@@ -1,53 +1,65 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { getOwnerBySlug } from "@/lib/db/owner-queries";
 import OwnerHeader from "@/components/owners/OwnerHeader";
 import OwnerSidebar from "@/components/owners/OwnerSidebar";
 import Loading from "@/components/global/loading";
+import ClientTable from "@/components/owners/ClientTable";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import AddClientDialog from "@/components/owners/AddClientDialog";
 import { getClientsByOwner } from "@/lib/db/client-queries";
-import { useAuth } from "@clerk/nextjs";
 
 const AgencyHomePage = () => {
-  const router = useRouter();
-  const auth = useAuth();
-  const [owner, setOwner] = useState<Owner | null>(null);
+  const [owner, setOwner] = useState<Owner>();
   const [clients, setClients] = useState<Client[]>([]);
-  const { agency } = useParams();
+  const params = useParams();
 
   useEffect(() => {
-    // if (auth.isLoaded && !auth.isSignedIn) {
-    //   router.push("/sign-in");
-    // }
-
     const fetchOwner = async () => {
-      const owner = await getOwnerBySlug(agency?.toString() || "");
+      const owner = await getOwnerBySlug(params.agency.toString());
       setOwner(owner as Owner);
     };
 
-    const fetchClients = async (ownerId: string) => {
-      const clients = await getClientsByOwner(ownerId);
+    const fetchClients = async (ownerI: Owner) => {
+      const clients = await getClientsByOwner(ownerI.id);
+
       setClients(clients as Client[]);
     };
 
-    if (agency) {
+    if (params.agency) {
       fetchOwner();
     }
 
     if (owner) {
-      fetchClients(owner.id);
+      fetchClients(owner);
     }
-  }, [agency, owner]);
+  }, [params.agency, owner]);
 
   return owner ? (
     <div className="flex h-screen">
-      <div className="lg:w-[20%] w-24 fixed h-full">
-        <OwnerSidebar owner={owner} active="home" />
-      </div>
+      {owner && (
+        <div className="lg:w-[20%] w-24 fixed h-full">
+          <OwnerSidebar owner={owner} active="clients" />
+        </div>
+      )}
       <div className="flex-1 ml-[6rem] lg:ml-[20%]">
         <OwnerHeader className="border-b-2 border-gray-900 border-dotted" />
-        <div className="p-4">Analytics Here</div>
+        <div className="p-4">
+          <div className="flex justify-between">
+            <h1 className="text-3xl font-bold mb-4">
+              {owner.companyName} Clients
+            </h1>
+            <AddClientDialog owner={owner}>
+              <Button className="flex gap-1 items-center">
+                <PlusCircle className="h-6 w-6" /> Add New Client
+              </Button>
+            </AddClientDialog>
+          </div>{" "}
+          <ClientTable client={clients} />
+        </div>
       </div>
     </div>
   ) : (

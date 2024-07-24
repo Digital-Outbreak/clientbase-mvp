@@ -6,8 +6,10 @@ import {
   CreditCard,
   UserPlus2,
   MessageCircleMore,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -32,12 +34,6 @@ const OwnerSidebar = ({
       label: "Clients",
       slug: `/${owner.companySlug}/clients`,
     },
-    // {
-    //   id: "agency-messages",
-    //   icon: MessageCircleMore,
-    //   label: "Agency Messages",
-    //   slug: `/${owner.companySlug}/clients/messages`,
-    // },
     {
       id: "invite",
       icon: UserPlus2,
@@ -48,10 +44,11 @@ const OwnerSidebar = ({
 
   const teamItems = [
     {
-      id: "Billing",
+      id: "billing",
       icon: CreditCard,
       label: "Billing",
       slug: `/${owner.companySlug}/billing`,
+      action: () => showToast("No Billing For Now :)"),
     },
     {
       id: "settings",
@@ -66,15 +63,23 @@ const OwnerSidebar = ({
     icon: Icon,
     label,
     slug,
+    action,
   }: {
     id: string;
     icon: React.ElementType;
     label: string;
-    slug: string;
+    slug?: string;
+    action?: () => void;
   }) => (
     <li>
       <a
-        href={slug}
+        href={slug || "#"}
+        onClick={(e) => {
+          if (action) {
+            e.preventDefault();
+            action();
+          }
+        }}
         className={cn(
           "flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-gray-800",
           active === id ? "bg-purple-600 hover:bg-purple-700" : ""

@@ -1,11 +1,12 @@
 "use client";
 import React from "react";
-import logo from "@/../public/logo.svg";
+import logo from "@/../public/logo.png";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
 import AddTeamMemberDialog from "../team/AddTeamMemberDialog";
+import { Badge } from "../ui/badge";
 
 const OwnerHeader = ({ className }: { className?: string }) => {
   const user = useUser();
@@ -13,9 +14,26 @@ const OwnerHeader = ({ className }: { className?: string }) => {
     <div className={`p-6 shadow-md flex justify-between z-[999] ${className}`}>
       <Link
         href="/"
-        className="flex justify-center mb-4 hover:opacity-80 transition duration-300 ease-in-out"
+        className="flex justify-center items-center mb-4 hover:opacity-80 transition duration-300 ease-in-out relative"
       >
-        <Image src={logo} alt="logo" width={200} height={200} />
+        <div className="relative">
+          <Image src={logo} alt="logo" width={50} />
+          <Badge className="absolute top-0 left-0">Beta</Badge>
+        </div>
+        <p
+          className="
+          text-3xl
+          font-bold
+          text-white
+          ml-2
+          hover:text-gray-300
+          transition
+          duration-300
+          ease-in-out
+        "
+        >
+          Client<span className="text-purple-300">base</span>
+        </p>
       </Link>
       <nav>
         {!user.isSignedIn ? (
