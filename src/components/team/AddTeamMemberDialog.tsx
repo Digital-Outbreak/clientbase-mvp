@@ -16,25 +16,28 @@ import { useRouter } from "next/navigation";
 
 const AddTeamMemberDialog = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const user = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const [agencyId, setAgencyId] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const joinAgency = async () => {
-    setLoading(true);
-    if (!user.isSignedIn || !user.isLoaded) {
+    if (!isSignedIn || !isLoaded) {
       showToast("You Must Be Signed In To Join An Agency");
       return;
     }
-    if (name === null || agencyId === null) {
+
+    if (!name || !agencyId) {
       showToast("Please Fill Out All Fields");
       return;
     }
+
+    setLoading(true);
+
     try {
       const userModel = {
-        id: user.user.id,
-        emailAddresse: user.user.emailAddresses[0].emailAddress,
+        id: user.id,
+        emailAddress: user.emailAddresses[0].emailAddress,
         name: name,
         ownerId: agencyId,
       };
@@ -43,12 +46,11 @@ const AddTeamMemberDialog = ({ children }: { children: React.ReactNode }) => {
       showToast("Joined Agency Successfully");
 
       router.push(`/${teamMate?.companySlug}`);
-
-      setLoading(false);
     } catch (error) {
-      showToast(`Error Joining Agency ${error}`);
+      showToast(`Error Joining Agency: ${error}`);
+    } finally {
+      setLoading(false);
     }
-    setLoading;
   };
 
   return (
@@ -58,8 +60,8 @@ const AddTeamMemberDialog = ({ children }: { children: React.ReactNode }) => {
         <DialogHeader>
           <DialogTitle className="text-2xl">Get Inside An Agency</DialogTitle>
           <DialogDescription className="capitalize text-gray-300 leading-6">
-            You Must've Received An Agency Key To Join An Agency, Please Enter
-            that here
+            You Must&apos;ve Received An Agency Key To Join An Agency, Please
+            Enter that here
           </DialogDescription>
         </DialogHeader>
 

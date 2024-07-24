@@ -112,15 +112,16 @@ export default function Home() {
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="flex-1 bg-purple-700 rounded-lg shadow-lg p-6">
               <p className="text-base text-primary-foreground/70 mb-4">
-                "This platform has transformed the way we manage our clients.
-                It's intuitive, powerful, and essential for our agency."
+                &quot;This platform has transformed the way we manage our
+                clients. It&apos;s intuitive, powerful, and essential for our
+                agency.&quot;
               </p>
               <p className="font-semibold">Jane Doe, CEO of Creative Agency</p>
             </div>
             <div className="flex-1 bg-purple-700 rounded-lg shadow-lg p-6">
               <p className="text-base text-primary-foreground/70 mb-4">
-                "The real-time chat feature is a game-changer. Our communication
-                with clients has never been smoother."
+                &quot;The real-time chat feature is a game-changer. Our
+                communication with clients has never been smoother.&quot;
               </p>
               <p className="font-semibold">John Smith, Project Manager</p>
             </div>
