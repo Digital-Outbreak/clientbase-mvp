@@ -37,7 +37,7 @@ const AddTeamMemberDialog = ({ children }: { children: React.ReactNode }) => {
     try {
       const userModel = {
         id: user.id,
-        emailAddress: user.emailAddresses[0].emailAddress,
+        emailAddresse: user.emailAddresses[0].emailAddress,
         name: name,
         ownerId: agencyId,
       };

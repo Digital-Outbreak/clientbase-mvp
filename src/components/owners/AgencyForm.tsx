@@ -17,6 +17,7 @@ import { UploadDropzone } from "@/lib/uploadthing";
 import { handleError } from "@/lib/utils";
 import { updateOwner } from "@/lib/db/owner-queries";
 import { useRouter } from "next/navigation";
+import { Owner } from "@prisma/client";
 
 interface AgencyFormProps {
   user: Owner | null;

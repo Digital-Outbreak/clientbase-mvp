@@ -3,6 +3,7 @@ import { getOwnerById } from "@/lib/db/owner-queries";
 import { redirect } from "next/navigation";
 import AgencyForm from "@/components/owners/AgencyForm";
 import OwnerHeader from "@/components/owners/OwnerHeader";
+import { Owner } from "@prisma/client";
 
 const DashboardPage = async () => {
   const { userId } = auth();
