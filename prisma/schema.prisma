@@ -43,7 +43,7 @@ model Owner {
 
   // agency
   companyName    String
-  companySlug    String?      @unique
+  companySlug    String?
   imageUrl       String
   companyIconUrl String
   role           OwnerRole    @default(NOAGENCY)
