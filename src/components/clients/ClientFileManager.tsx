@@ -6,6 +6,7 @@ import Image from "next/image";
 import { showToast } from "@/lib/utils";
 import Moment from "react-moment";
 import { getUploadedFiles } from "@/lib/db/client-queries";
+import ClientUploadImageDialog from "./ClientUploadFileDialog";
 
 const ClientFileManager = ({ client }: { client: Client }) => {
   const [files, setFiles] = useState<FileData[] | null>(null);
@@ -47,10 +48,12 @@ const ClientFileManager = ({ client }: { client: Client }) => {
     return (
       <div className="p-4">
         <div className="flex justify-end items-center mb-4">
-          <Button className="flex gap-2 items-center">
-            <PlusSquareIcon size={24} />
-            Upload File
-          </Button>
+          <ClientUploadImageDialog client={client}>
+            <Button className="flex gap-2 items-center">
+              <PlusSquareIcon size={24} />
+              Upload File
+            </Button>
+          </ClientUploadImageDialog>
         </div>
         <p className="text-gray-400 text-sm">
           No files uploaded for this client
